@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pipeline — PhD &amp; Job Application Tracker</title>
+<title>Application Tracker — PhD &amp; Job Application Tracker</title>
 <meta name="description" content="A clean, fast, open-source tracker for PhD and job applications. No backend. No accounts. Your data stays in your browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
-/* Theme tokens */
+/* ── Theme tokens ─────────────────────────────────────────── */
 :root{
   --cream:#f6f3eb;
   --cream-2:#efeadd;
@@ -94,7 +94,7 @@ input:focus,select:focus,textarea:focus{outline:none}
 .tab.active .tab-count{background:var(--accent-2);color:var(--paper)}
 .topbar-right{display:flex;align-items:center;gap:8px;padding:12px 0;flex-wrap:wrap}
 
-/* Buttons */
+/* ── Buttons ─────────────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;letter-spacing:-0.005em;transition:all .12s;white-space:nowrap;border:1px solid transparent}
 .btn-primary{background:var(--ink);color:var(--paper)}
 .btn-primary:hover{background:var(--ink-2)}
@@ -235,6 +235,46 @@ tbody tr:last-child td{border-bottom:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast i{color:var(--accent-2)}
 
+/* ── Alert banners (deadlines, backup reminders) ─────────────────────────────────────────── */
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.alert{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r-lg);border:1px solid;font-size:13px;line-height:1.5}
+.alert i.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-body{flex:1;min-width:0}
+.alert-title{font-weight:600;color:var(--ink);margin-bottom:2px;letter-spacing:-0.005em}
+.alert-text{color:var(--ink-2);font-size:12.5px}
+.alert-text strong{color:var(--ink);font-weight:600}
+.alert-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.alert-close{color:var(--ink-3);font-size:16px;padding:2px 6px;border-radius:var(--r);flex-shrink:0;transition:all .12s}
+.alert-close:hover{background:rgba(0,0,0,.05);color:var(--ink)}
+.alert-deadline{background:var(--red-bg);border-color:var(--red)}
+.alert-deadline i.alert-icon{color:var(--red)}
+.alert-soon{background:var(--amber-bg);border-color:var(--amber)}
+.alert-soon i.alert-icon{color:var(--amber)}
+.alert-backup{background:var(--blue-bg);border-color:var(--blue)}
+.alert-backup i.alert-icon{color:var(--blue)}
+.alert-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.6);border-radius:11px;padding:2px 9px;font-size:11px;font-weight:600;font-family:var(--font-mono);margin:2px 4px 2px 0;color:var(--ink-2);text-decoration:none}
+.alert-chip:hover{text-decoration:none;background:rgba(255,255,255,0.85)}
+@media(prefers-color-scheme:dark){.alert-chip{background:rgba(0,0,0,0.25)}.alert-chip:hover{background:rgba(0,0,0,0.4)}}
+.alert-chip-days{color:var(--red);font-weight:700;font-family:var(--font-mono)}
+
+/* Restore modal-specific styles */
+.restore-info{background:var(--blue-bg);border:1px solid var(--blue);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.restore-info i{color:var(--blue);font-size:18px;flex-shrink:0;margin-top:1px}
+.restore-info strong{color:var(--ink);font-weight:600}
+.restore-info code{font-family:var(--font-mono);font-size:11.5px;background:rgba(0,0,0,0.06);padding:1px 6px;border-radius:4px;color:var(--ink)}
+@media(prefers-color-scheme:dark){.restore-info code{background:rgba(255,255,255,0.08)}}
+.file-input-label{display:flex;align-items:center;justify-content:center;gap:10px;padding:28px;border:2px dashed var(--line-2);border-radius:var(--r-lg);cursor:pointer;background:var(--cream-2);color:var(--ink-2);font-size:13px;font-weight:500;transition:all .15s;text-align:center}
+.file-input-label:hover{border-color:var(--accent-2);color:var(--ink);background:var(--paper)}
+.file-input-label i{font-size:24px;color:var(--accent-2)}
+.file-input-label input{display:none}
+.file-selected{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--green-bg);border:1px solid var(--green);border-radius:var(--r);font-size:12.5px;color:var(--green);font-family:var(--font-mono);margin-top:10px}
+.file-selected i{color:var(--green);font-size:16px}
+.restore-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.restore-stat{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.restore-stat-label{font-size:10.5px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;font-family:var(--font-mono);margin-bottom:4px}
+.restore-stat-val{font-family:var(--font-display);font-size:20px;font-weight:500;color:var(--ink);line-height:1}
+.restore-stat-sub{font-size:11px;color:var(--ink-3);margin-top:2px}
+
 /* ── Footer ─────────────────────────────────────────── */
 .foot{padding:32px 28px 24px;text-align:center;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line);margin-top:24px}
 .foot a{color:var(--ink-2);font-weight:500}
@@ -269,7 +309,7 @@ tbody tr:last-child td{border-bottom:none}
 <div id="app"></div>
 <div class="toast" id="toast"></div>
 <footer class="foot">
-  Pipeline — open-source application tracker. Your data lives only in this browser. <a href="https://github.com" target="_blank" id="gh-link">Fork on GitHub</a> <span class="foot-mark">·</span> Built for researchers
+  Application Tracker — open-source application tracker. Your data lives only in this browser. <a href="https://github.com" target="_blank" id="gh-link">Fork on GitHub</a> <span class="foot-mark">·</span> Built for researchers
 </footer>
 
 <script>
@@ -298,25 +338,35 @@ const EXAMPLE_JOBS=[
 ];
 
 // ═══════════════ STATE ═══════════════
-const HAS_SEEN_INTRO='pipeline_seen_intro_v1';
+const HAS_SEEN_INTRO='application_seen_intro_v1';
 let S={
   tab:'phd',
-  phd: loadData('pipeline_phd_v1') || EXAMPLE_PHD.map(x=>({...x,comments:[...(x.comments||[])]})),
-  jobs: loadData('pipeline_jobs_v1') || EXAMPLE_JOBS.map(x=>({...x,comments:[...(x.comments||[])]})),
+  phd: loadData('application_phd_v1') || EXAMPLE_PHD.map(x=>({...x,comments:[...(x.comments||[])]})),
+  jobs: loadData('application_jobs_v1') || EXAMPLE_JOBS.map(x=>({...x,comments:[...(x.comments||[])]})),
   modal:null, editItem:null,
   expandedRow:null,
   sortKey:'',sortDir:1,
   filterStatus:'All',filterPriority:'All',filterSearch:'',
   showIntro: !localStorage.getItem(HAS_SEEN_INTRO),
   menuOpen:false,
+  dismissedAlerts: JSON.parse(localStorage.getItem('application_dismissed_alerts_v1')||'{}'),
+  restoreModal: null, // { file, parsed, error }
 };
 
 function loadData(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
 function saveData(){
   try{
-    localStorage.setItem('pipeline_phd_v1',JSON.stringify(S.phd));
-    localStorage.setItem('pipeline_jobs_v1',JSON.stringify(S.jobs));
+    localStorage.setItem('application_phd_v1',JSON.stringify(S.phd));
+    localStorage.setItem('application_jobs_v1',JSON.stringify(S.jobs));
   }catch(e){toast('Storage error — data may not be saved.')}
+}
+function saveDismissed(){localStorage.setItem('application_dismissed_alerts_v1',JSON.stringify(S.dismissedAlerts))}
+function getLastBackup(){return localStorage.getItem('application_last_backup_v1')}
+function setLastBackup(){localStorage.setItem('application_last_backup_v1',new Date().toISOString())}
+function daysSinceBackup(){
+  const last=getLastBackup();
+  if(!last) return null; // never backed up
+  return Math.floor((Date.now()-new Date(last).getTime())/(864e5));
 }
 
 // ═══════════════ HELPERS ═══════════════
@@ -475,7 +525,7 @@ function buildHero(){
   if(!S.showIntro) return '';
   return`<div class="hero show" id="hero">
     <button class="hero-close" id="hero-close" aria-label="Dismiss"><i class="ti ti-x"></i></button>
-    <div class="hero-eyebrow">Pipeline · open-source</div>
+    <div class="hero-eyebrow">application · open-source</div>
     <h1>Track your applications<br>without the <em>spreadsheet chaos</em>.</h1>
     <p>A clean, fast tracker for PhD applications and research jobs. No accounts, no cloud, no tracking — your data lives only in this browser. Fork it on GitHub to deploy your own copy.</p>
     <div class="hero-actions">
@@ -483,6 +533,103 @@ function buildHero(){
       <button class="btn btn-ghost" id="hero-dismiss">Keep examples for now</button>
     </div>
   </div>`;
+}
+
+function buildAlerts(){
+  const alerts=[];
+  const now=Date.now();
+  const today=new Date();today.setHours(0,0,0,0);
+
+  // ── Deadline alerts ──
+  // Collect all upcoming PhD deadlines that are active (not rejected, applied, offer, withdrawn)
+  const upcoming=S.phd.filter(x=>{
+    if(!x.deadline) return false;
+    if(['Rejected','Offer','Applied'].includes(x.status)) return false;
+    const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
+    return d>=0 && d<=14;
+  }).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline));
+
+  const urgent=upcoming.filter(x=>{
+    const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
+    return d<=7;
+  });
+  const soon=upcoming.filter(x=>{
+    const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
+    return d>7 && d<=14;
+  });
+
+  // Build deadline alert key for dismissal (based on the IDs in the alert)
+  if(urgent.length){
+    const chips=urgent.map(x=>{
+      const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
+      const dayLabel=d===0?'today':d===1?'1 day':`${d} days`;
+      return`<span class="alert-chip"><span class="alert-chip-days">${dayLabel}</span> · ${esc(x.uni)}</span>`;
+    }).join('');
+    const noun=urgent.length===1?'deadline is':'deadlines are';
+    alerts.push(`<div class="alert alert-deadline">
+      <i class="ti ti-alert-triangle alert-icon"></i>
+      <div class="alert-body">
+        <div class="alert-title">${urgent.length} ${noun} within 7 days</div>
+        <div class="alert-text">Take action now — finalise your application materials, send reminder emails to professors if needed.</div>
+        <div style="margin-top:6px">${chips}</div>
+      </div>
+    </div>`);
+  }
+  if(soon.length){
+    const chips=soon.map(x=>{
+      const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
+      return`<span class="alert-chip"><span style="color:var(--amber);font-weight:700">${d} days</span> · ${esc(x.uni)}</span>`;
+    }).join('');
+    const noun=soon.length===1?'deadline is':'deadlines are';
+    alerts.push(`<div class="alert alert-soon">
+      <i class="ti ti-clock-hour-4 alert-icon"></i>
+      <div class="alert-body">
+        <div class="alert-title">${soon.length} ${noun} in the next 2 weeks</div>
+        <div class="alert-text">Plan your application package: SOP, recommendation letters, CV updates.</div>
+        <div style="margin-top:6px">${chips}</div>
+      </div>
+    </div>`);
+  }
+
+  // ── Backup reminder ──
+  const totalItems=S.phd.length + S.jobs.length;
+  const last=getLastBackup();
+  const dismissedKey='backup_'+(last?last.slice(0,10):'never');
+
+  if(totalItems>0 && !S.dismissedAlerts[dismissedKey]){
+    const days=daysSinceBackup();
+    let showBackup=false;
+    let title='', text='';
+    if(days===null){
+      // Never backed up and has data
+      if(totalItems>=3){
+        showBackup=true;
+        title='You haven\'t backed up your data yet';
+        text=`You have <strong>${totalItems} entries</strong> stored in this browser only. Download a JSON backup so you can restore it on another device or recover if browser data is cleared.`;
+      }
+    } else if(days>=7){
+      showBackup=true;
+      title=`Last backup was ${days} days ago`;
+      text=`Your data has changed since then. Download an updated backup to keep it safe and portable across devices.`;
+    }
+    if(showBackup){
+      alerts.push(`<div class="alert alert-backup">
+        <i class="ti ti-cloud-download alert-icon"></i>
+        <div class="alert-body">
+          <div class="alert-title">${title}</div>
+          <div class="alert-text">${text}</div>
+          <div class="alert-actions">
+            <button class="btn btn-primary btn-sm" id="alert-backup-btn"><i class="ti ti-download"></i> Download backup now</button>
+            <button class="btn btn-ghost btn-sm" id="alert-restore-btn"><i class="ti ti-upload"></i> Restore from file</button>
+          </div>
+        </div>
+        <button class="alert-close" id="alert-backup-dismiss" data-key="${dismissedKey}" title="Dismiss"><i class="ti ti-x"></i></button>
+      </div>`);
+    }
+  }
+
+  if(!alerts.length) return '';
+  return`<div class="alerts">${alerts.join('')}</div>`;
 }
 
 function buildStats(){
@@ -626,6 +773,9 @@ function buildDetailRow(item,isPhd){
 }
 
 function buildModal(){
+  // Restore modal — handled separately from add/edit forms
+  if(S.modal==='restore') return buildRestoreModal();
+
   const isPhd=S.modal.includes('phd');
   const isEdit=S.modal.startsWith('edit');
   const d=isEdit&&S.editItem?S.editItem:{};
@@ -704,6 +854,88 @@ function buildModal(){
   </div>`;
 }
 
+function buildRestoreModal(){
+  const rm=S.restoreModal||{};
+  const hasFile=!!rm.file;
+  const hasParsed=!!rm.parsed;
+  const hasError=!!rm.error;
+
+  const currentPhd=S.phd.length;
+  const currentJobs=S.jobs.length;
+  const newPhd=hasParsed?rm.parsed.phd.length:0;
+  const newJobs=hasParsed?rm.parsed.jobs.length:0;
+  const exportedAt=hasParsed&&rm.parsed.exportedAt?new Date(rm.parsed.exportedAt).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'unknown';
+
+  const fileSection = !hasFile ? `
+    <label class="file-input-label" for="restore-file-input">
+      <i class="ti ti-cloud-upload"></i>
+      <div>
+        <div>Click to select your backup file</div>
+        <div style="font-size:11px;color:var(--ink-3);margin-top:4px;font-weight:400">Choose a <code style="font-family:var(--font-mono);font-size:11px">.json</code> file you previously downloaded</div>
+      </div>
+      <input type="file" id="restore-file-input" accept="application/json,.json">
+    </label>
+  ` : hasError ? `
+    <div class="file-selected" style="background:var(--red-bg);color:var(--red);border-color:var(--red)">
+      <i class="ti ti-alert-circle"></i>
+      <div style="flex:1">
+        <div style="font-weight:600">${esc(rm.file.name)}</div>
+        <div style="font-size:11px;margin-top:2px;font-family:var(--font-body);font-weight:400">${esc(rm.error)}</div>
+      </div>
+      <button class="icon-btn" id="restore-clear-file" title="Choose different file"><i class="ti ti-x"></i></button>
+    </div>
+  ` : `
+    <div class="file-selected">
+      <i class="ti ti-file-check"></i>
+      <div style="flex:1">
+        <div style="font-weight:600">${esc(rm.file.name)}</div>
+        <div style="font-size:11px;margin-top:2px;font-family:var(--font-body);font-weight:400;color:var(--ink-2)">Backup from <strong>${esc(exportedAt)}</strong></div>
+      </div>
+      <button class="icon-btn" id="restore-clear-file" title="Choose different file"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="restore-stats">
+      <div class="restore-stat">
+        <div class="restore-stat-label">PhD applications</div>
+        <div class="restore-stat-val">${newPhd}</div>
+        <div class="restore-stat-sub">currently: ${currentPhd}</div>
+      </div>
+      <div class="restore-stat">
+        <div class="restore-stat-label">Job applications</div>
+        <div class="restore-stat-val">${newJobs}</div>
+        <div class="restore-stat-sub">currently: ${currentJobs}</div>
+      </div>
+    </div>
+    ${(currentPhd+currentJobs>0)?`<div style="margin-top:14px;padding:10px 12px;background:var(--amber-bg);color:var(--amber);border-radius:var(--r);font-size:12px;display:flex;gap:8px;align-items:flex-start"><i class="ti ti-alert-triangle" style="margin-top:1px"></i><div><strong>Warning:</strong> Restoring will replace all current data on this device (${currentPhd+currentJobs} entries). Download a backup of your current data first if you want to keep it.</div></div>`:''}
+  `;
+
+  return`<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow">Data restore</div>
+          <div class="modal-title">Restore from backup</div>
+        </div>
+        <button class="icon-btn" id="modal-close" aria-label="Close"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="restore-info">
+          <i class="ti ti-info-circle"></i>
+          <div>
+            Upload your <strong>application backup file</strong> (typically named <code>application_backup_YYYY-MM-DD.json</code>). The contents will be parsed and used to update your application data on this device.
+            <br><br>
+            This is how you move your data between devices: download a backup from one browser, then upload it here in any other browser to restore everything — same entries, statuses, log notes, deadlines.
+          </div>
+        </div>
+        ${fileSection}
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="restore-confirm-btn" ${hasParsed?'':'disabled style="opacity:0.5;cursor:not-allowed"'}>Restore data</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 // ═══════════════ MAIN RENDER ═══════════════
 function render(){
   const isPhd=S.tab==='phd';
@@ -715,7 +947,7 @@ function render(){
         <div class="brand">
           <div class="brand-mark">P</div>
           <div>
-            <div class="brand-name">Pipeline</div>
+            <div class="brand-name">application</div>
             <div class="brand-tag">PhD &amp; job applications</div>
           </div>
         </div>
@@ -733,9 +965,9 @@ function render(){
         <div class="menu">
           <button class="btn btn-ghost btn-sm" id="menu-btn" aria-label="Menu"><i class="ti ti-dots-vertical"></i></button>
           <div class="menu-pop${S.menuOpen?' show':''}" id="menu-pop">
-            <button class="menu-item" id="export-btn"><i class="ti ti-download"></i> Export CSV</button>
-            <button class="menu-item" id="import-btn"><i class="ti ti-upload"></i> Import JSON backup</button>
-            <button class="menu-item" id="backup-btn"><i class="ti ti-archive"></i> Download JSON backup</button>
+            <button class="menu-item" id="backup-btn"><i class="ti ti-cloud-download"></i> Download JSON backup</button>
+            <button class="menu-item" id="import-btn"><i class="ti ti-cloud-upload"></i> Restore from backup</button>
+            <button class="menu-item" id="export-btn"><i class="ti ti-file-spreadsheet"></i> Export as CSV</button>
             <div class="menu-divider"></div>
             <button class="menu-item" id="intro-btn"><i class="ti ti-info-circle"></i> Show intro</button>
             <button class="menu-item danger" id="clear-btn"><i class="ti ti-trash"></i> Clear all data</button>
@@ -745,6 +977,7 @@ function render(){
     </header>
     <main class="content">
       ${buildHero()}
+      ${buildAlerts()}
       ${buildStats()}
       ${buildToolbar()}
       <div id="table-area">${buildTable()}</div>
@@ -767,9 +1000,19 @@ function attachEvents(){
   document.getElementById('menu-btn')?.addEventListener('click',e=>{e.stopPropagation();S.menuOpen=!S.menuOpen;render();});
   document.getElementById('export-btn')?.addEventListener('click',exportCSV);
   document.getElementById('backup-btn')?.addEventListener('click',backupJSON);
-  document.getElementById('import-btn')?.addEventListener('click',importJSON);
+  document.getElementById('import-btn')?.addEventListener('click',openRestoreModal);
   document.getElementById('clear-btn')?.addEventListener('click',clearAll);
   document.getElementById('intro-btn')?.addEventListener('click',()=>{S.showIntro=true;S.menuOpen=false;localStorage.removeItem(HAS_SEEN_INTRO);render();});
+
+  // Alert action buttons
+  document.getElementById('alert-backup-btn')?.addEventListener('click',backupJSON);
+  document.getElementById('alert-restore-btn')?.addEventListener('click',openRestoreModal);
+  document.getElementById('alert-backup-dismiss')?.addEventListener('click',e=>{
+    const key=e.currentTarget.dataset.key;
+    S.dismissedAlerts[key]=true;
+    saveDismissed();
+    render();
+  });
   document.getElementById('hero-close')?.addEventListener('click',dismissHero);
   document.getElementById('hero-dismiss')?.addEventListener('click',dismissHero);
   document.getElementById('start-fresh')?.addEventListener('click',()=>{
@@ -818,10 +1061,23 @@ function attachTableEvents(){
 }
 
 function attachModalEvents(){
-  const close=()=>{S.modal=null;S.editItem=null;render();};
+  const close=()=>{S.modal=null;S.editItem=null;S.restoreModal=null;render();};
   document.getElementById('modal-bg')?.addEventListener('click',e=>{if(e.target.id==='modal-bg')close();});
   document.getElementById('modal-close')?.addEventListener('click',close);
   document.getElementById('modal-cancel')?.addEventListener('click',close);
+
+  // Restore modal handlers
+  document.getElementById('restore-file-input')?.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(file) handleRestoreFileSelect(file);
+  });
+  document.getElementById('restore-clear-file')?.addEventListener('click',()=>{
+    S.restoreModal={file:null,parsed:null,error:null};render();
+  });
+  document.getElementById('restore-confirm-btn')?.addEventListener('click',()=>{
+    if(!S.restoreModal?.parsed) return;
+    confirmRestore();
+  });
   document.getElementById('del-modal-btn')?.addEventListener('click',()=>{
     if(!confirm('Delete this entry? This cannot be undone.')) return;
     const id=S.editItem.id;
@@ -899,7 +1155,7 @@ function exportCSV(){
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`pipeline_${isPhd?'phd':'jobs'}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download=`application_${isPhd?'phd':'jobs'}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();URL.revokeObjectURL(a.href);
   toast('CSV exported');
   S.menuOpen=false;render();
@@ -910,35 +1166,55 @@ function backupJSON(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download=`pipeline_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.download=`application_backup_${new Date().toISOString().slice(0,10)}.json`;
   a.click();URL.revokeObjectURL(a.href);
-  toast('Backup downloaded');
+  setLastBackup(); // mark as backed up now
+  toast('Backup downloaded — keep it safe!');
   S.menuOpen=false;render();
 }
 
-function importJSON(){
+// Restore modal: user picks a file, sees a summary, then confirms
+function openRestoreModal(){
   S.menuOpen=false;
-  const input=document.createElement('input');
-  input.type='file';input.accept='.json';
-  input.onchange=e=>{
-    const file=e.target.files[0];if(!file) return;
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      try{
-        const data=JSON.parse(ev.target.result);
-        if(!data.phd||!data.jobs) throw new Error('Invalid file format');
-        if(!confirm(`This will replace your current data (${S.phd.length} PhD, ${S.jobs.length} jobs) with ${data.phd.length} PhD and ${data.jobs.length} jobs. Continue?`)) return;
-        S.phd=data.phd;S.jobs=data.jobs;saveData();render();
-        toast('Data imported');
-      }catch(err){alert('Invalid backup file: '+err.message);}
-    };
-    reader.readAsText(file);
+  S.modal='restore';
+  S.restoreModal={file:null,parsed:null,error:null};
+  render();
+}
+
+function handleRestoreFileSelect(file){
+  if(!file){S.restoreModal={file:null,parsed:null,error:null};render();return;}
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.phd||!data.jobs||!Array.isArray(data.phd)||!Array.isArray(data.jobs)){
+        throw new Error('This file does not look like a application backup. Expected fields: phd[], jobs[].');
+      }
+      S.restoreModal={file,parsed:data,error:null};
+    }catch(err){
+      S.restoreModal={file,parsed:null,error:err.message};
+    }
+    render();
   };
-  input.click();
+  reader.onerror=()=>{
+    S.restoreModal={file,parsed:null,error:'Could not read the file.'};
+    render();
+  };
+  reader.readAsText(file);
+}
+
+function confirmRestore(){
+  const data=S.restoreModal?.parsed;
+  if(!data) return;
+  S.phd=data.phd;S.jobs=data.jobs;
+  saveData();
+  S.modal=null;S.restoreModal=null;
+  render();
+  toast(`Restored ${data.phd.length} PhD + ${data.jobs.length} job entries`);
 }
 
 function clearAll(){
-  if(!confirm('Delete ALL your data permanently? Consider backing up first (Download JSON backup). This cannot be undone.')) return;
+  if(!confirm('Delete ALL your data permanently? Consider downloading a backup first. This cannot be undone.')) return;
   S.phd=[];S.jobs=[];S.menuOpen=false;saveData();render();
   toast('All data cleared','ti-trash');
 }
