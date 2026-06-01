@@ -1,1 +1,954 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline — PhD &amp; Job Application Tracker</title>
+<meta name="description" content="A clean, fast, open-source tracker for PhD and job applications. No backend. No accounts. Your data stays in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.33.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Theme tokens ─────────────────────────────────────────── */
+:root{
+  --cream:#f6f3eb;
+  --cream-2:#efeadd;
+  --paper:#fdfbf5;
+  --ink:#1a1d29;
+  --ink-2:#3d404d;
+  --ink-3:#6b6e7a;
+  --ink-4:#a3a59f;
+  --line:#d8d3c4;
+  --line-2:#c2bcab;
+  --accent:#1a1d29;
+  --accent-2:#d97757;        /* warm terracotta */
+  --blue-bg:#e3edf9;--blue:#1a4d8f;
+  --green-bg:#dde9d0;--green:#3a5d1d;
+  --amber-bg:#f5e3c4;--amber:#7a4a0a;
+  --red-bg:#f5dad6;--red:#8a2a20;
+  --purple-bg:#e3def0;--purple:#3f3878;
+  --pink-bg:#f0d8de;--pink:#7d2a48;
+  --gray-bg:#e8e3d3;--gray:#5a5a52;
+  --teal-bg:#cfe5dc;--teal:#1f5746;
+  --r:6px;
+  --r-lg:10px;
+  --font-display:'Fraunces',serif;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --cream:#1a1c20;
+    --cream-2:#22252b;
+    --paper:#272a31;
+    --ink:#f0ece0;
+    --ink-2:#c8c4b6;
+    --ink-3:#928e80;
+    --ink-4:#5e5a4f;
+    --line:#3a3d44;
+    --line-2:#4d5159;
+    --accent:#f0ece0;
+    --blue-bg:#1a3052;--blue:#a3c4ec;
+    --green-bg:#264018;--green:#bbd698;
+    --amber-bg:#4d320a;--amber:#f0c374;
+    --red-bg:#52201a;--red:#f0b5ad;
+    --purple-bg:#2e2952;--purple:#c8c1e9;
+    --pink-bg:#52242e;--pink:#e8b3c0;
+    --gray-bg:#3a3a35;--gray:#c2bfae;
+    --teal-bg:#1a3a30;--teal:#a5d4c3;
+  }
+}
+
+html,body{background:var(--cream);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+input,select,textarea,button{font-family:inherit;font-size:14px;color:var(--ink)}
+button{cursor:pointer;border:none;background:none}
+input:focus,select:focus,textarea:focus{outline:none}
+
+/* ── Top bar ─────────────────────────────────────────── */
+.topbar{
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  position:sticky;top:0;z-index:100;
+  flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:18px 0;cursor:default}
+.brand-mark{
+  width:28px;height:28px;border-radius:6px;background:var(--ink);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);
+  font-weight:600;font-size:16px;letter-spacing:-0.02em;
+}
+.brand-name{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:-0.01em;line-height:1}
+.brand-tag{font-size:11px;color:var(--ink-3);margin-top:3px;font-weight:400;letter-spacing:0.02em}
+.tabs{display:flex;gap:0;align-items:stretch}
+.tab{padding:14px 18px;font-size:13px;color:var(--ink-3);border-bottom:2px solid transparent;font-weight:500;letter-spacing:-0.005em;transition:color .15s;display:flex;align-items:center;gap:6px}
+.tab.active{color:var(--ink);border-bottom-color:var(--accent-2)}
+.tab:hover:not(.active){color:var(--ink-2)}
+.tab-count{font-size:11px;font-weight:600;color:var(--ink-4);font-family:var(--font-mono);background:var(--cream-2);padding:1px 6px;border-radius:9px;line-height:1.4}
+.tab.active .tab-count{background:var(--accent-2);color:var(--paper)}
+.topbar-right{display:flex;align-items:center;gap:8px;padding:12px 0;flex-wrap:wrap}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;letter-spacing:-0.005em;transition:all .12s;white-space:nowrap;border:1px solid transparent}
+.btn-primary{background:var(--ink);color:var(--paper)}
+.btn-primary:hover{background:var(--ink-2)}
+.btn-accent{background:var(--accent-2);color:#fff}
+.btn-accent:hover{filter:brightness(1.08)}
+.btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink-2)}
+.btn-ghost:hover{background:var(--cream-2);color:var(--ink);border-color:var(--line-2)}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-danger{background:transparent;border:1px solid var(--red);color:var(--red)}
+.btn-danger:hover{background:var(--red-bg)}
+.icon-btn{padding:6px 8px;color:var(--ink-3);border-radius:var(--r);font-size:14px;transition:all .12s}
+.icon-btn:hover{background:var(--cream-2);color:var(--ink)}
+
+/* ── Page content ─────────────────────────────────────────── */
+.content{padding:24px 28px 60px;max-width:1280px;margin:0 auto;width:100%}
+
+/* ── Hero / intro for first-time visitors ─────────────────────────────────────────── */
+.hero{display:none;padding:40px 36px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:24px;position:relative;overflow:hidden}
+.hero.show{display:block}
+.hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:var(--accent-2);opacity:.08}
+.hero-eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px}
+.hero h1{font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:-0.02em;line-height:1.15;margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--accent-2)}
+.hero p{color:var(--ink-2);max-width:620px;margin-bottom:18px;font-size:15px;line-height:1.6}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hero-close{position:absolute;top:14px;right:14px;color:var(--ink-3);font-size:18px;padding:6px 8px;border-radius:var(--r)}
+.hero-close:hover{background:var(--cream-2);color:var(--ink)}
+
+/* ── Stats ─────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px;position:relative}
+.stat-label{font-size:11px;color:var(--ink-3);font-weight:500;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+.stat-num{font-family:var(--font-display);font-size:28px;font-weight:500;line-height:1;letter-spacing:-0.02em}
+.stat-sub{font-size:11px;color:var(--ink-3);margin-top:4px;font-family:var(--font-mono)}
+
+/* ── Toolbar ─────────────────────────────────────────── */
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-4);font-size:15px;pointer-events:none}
+.search-wrap input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink);font-size:13px;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--ink-3)}
+select.flt{padding:9px 11px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink);font-size:12px;cursor:pointer}
+.count-lbl{font-size:12px;color:var(--ink-3);font-family:var(--font-mono);white-space:nowrap;margin-left:auto}
+
+/* ── Table ─────────────────────────────────────────── */
+.table-wrap{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:660px}
+thead tr{background:var(--cream-2)}
+th{font-size:10.5px;font-weight:600;color:var(--ink-3);text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none;text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-mono)}
+th:hover{color:var(--ink)}
+th .sort-arrow{display:inline-block;width:14px;text-align:center;opacity:.6}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13px}
+tbody tr:last-child td{border-bottom:none}
+.item-row{cursor:pointer;transition:background .12s}
+.item-row:hover td{background:var(--cream-2)}
+.item-row.expanded td{background:var(--cream-2)}
+.cell-main{font-weight:500;color:var(--ink);line-height:1.3}
+.cell-sub{font-size:11.5px;color:var(--ink-3);margin-top:3px}
+.cell-link{font-size:11px;margin-top:3px;font-family:var(--font-mono)}
+
+/* ── Badges ─────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:11px;font-size:11px;font-weight:500;white-space:nowrap;letter-spacing:-0.005em}
+.s-Researching{background:var(--blue-bg);color:var(--blue)}
+.s-Emailed{background:var(--amber-bg);color:var(--amber)}
+.s-Applied{background:var(--green-bg);color:var(--green)}
+.s-Interview{background:var(--purple-bg);color:var(--purple)}
+.s-Offer{background:var(--teal-bg);color:var(--teal);font-weight:600}
+.s-Rejected{background:var(--red-bg);color:var(--red)}
+.s-Waitlist{background:var(--pink-bg);color:var(--pink)}
+.s-Saved{background:var(--gray-bg);color:var(--gray)}
+.s-OA{background:var(--amber-bg);color:var(--amber)}
+.p-High{background:var(--red-bg);color:var(--red)}
+.p-Medium{background:var(--amber-bg);color:var(--amber)}
+.p-Low{background:var(--gray-bg);color:var(--gray)}
+.f-Strong{background:var(--green-bg);color:var(--green)}
+.f-Good{background:var(--teal-bg);color:var(--teal)}
+.f-Moderate{background:var(--gray-bg);color:var(--gray)}
+
+.days-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:11px;font-family:var(--font-mono);letter-spacing:-0.01em}
+.days-urgent{background:var(--red-bg);color:var(--red)}
+.days-soon{background:var(--amber-bg);color:var(--amber)}
+.days-ok{background:var(--green-bg);color:var(--green)}
+.days-past{background:var(--gray-bg);color:var(--ink-3)}
+
+/* ── Row actions ─────────────────────────────────────────── */
+.row-actions{display:flex;gap:2px;opacity:0;transition:opacity .15s;justify-content:flex-end}
+.item-row:hover .row-actions,.item-row.expanded .row-actions{opacity:1}
+@media(hover:none){.row-actions{opacity:1}}
+
+/* ── Detail panel ─────────────────────────────────────────── */
+.detail-row td{background:var(--cream-2)!important;padding:20px 24px;border-bottom:1px solid var(--line)}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px 20px;margin-bottom:20px}
+.detail-field .dk{font-size:10.5px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;font-family:var(--font-mono)}
+.detail-field .dv{font-size:13px;color:var(--ink);word-break:break-word}
+.detail-section{margin-top:6px}
+.section-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-3);margin-bottom:10px;font-family:var(--font-mono);display:flex;align-items:center;gap:6px}
+.section-lbl::before{content:'';display:inline-block;width:14px;height:1px;background:var(--line-2)}
+.comment-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.comment-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:9px 12px;font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.comment-date{font-size:10.5px;color:var(--ink-4);margin-left:8px;font-family:var(--font-mono)}
+.comment-wrap{display:flex;gap:8px;margin-top:4px}
+.comment-wrap input{flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);color:var(--ink);font-size:12.5px}
+.comment-wrap input:focus{border-color:var(--ink-3)}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty{text-align:center;padding:64px 24px;color:var(--ink-3)}
+.empty i{font-size:36px;opacity:.35;display:block;margin-bottom:14px;color:var(--ink-4)}
+.empty-title{font-family:var(--font-display);font-size:18px;font-weight:500;color:var(--ink-2);margin-bottom:6px}
+.empty p{font-size:13px}
+
+/* ── Modal ─────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(26,29,41,.55);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.modal{background:var(--paper);border-radius:var(--r-lg);width:100%;max-width:620px;padding:28px;box-shadow:0 16px 56px rgba(26,29,41,.18);border:1px solid var(--line)}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.modal-eyebrow{font-family:var(--font-mono);font-size:10.5px;font-weight:500;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px}
+.modal-title{font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:-0.02em;line-height:1.15;margin-bottom:20px}
+.modal-body{display:flex;flex-direction:column;gap:14px}
+.form-row{display:flex;gap:12px;flex-wrap:wrap}
+.form-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:200px}
+.form-group label{font-size:11px;color:var(--ink-3);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-family:var(--font-mono)}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:1px solid var(--line);border-radius:var(--r);font-size:13px;color:var(--ink);background:var(--paper);width:100%;font-family:var(--font-body);transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--ink-3)}
+.form-group textarea{resize:vertical;min-height:72px;line-height:1.55}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:24px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line)}
+
+/* ── Quick Paste ─────────────────────────────────────────── */
+.qp-box{background:var(--cream-2);border:1px dashed var(--line-2);border-radius:var(--r);padding:14px}
+.qp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.qp-header i{color:var(--accent-2);font-size:16px}
+.qp-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--ink-2);font-family:var(--font-mono)}
+.qp-box textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:var(--r);font-size:12px;color:var(--ink);background:var(--paper);resize:vertical;min-height:80px;font-family:var(--font-body);line-height:1.55}
+.qp-actions{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.qp-status{font-size:12px;color:var(--green);font-family:var(--font-mono);display:flex;align-items:center;gap:5px}
+.qp-hint{font-size:11px;color:var(--ink-3);margin-top:6px;line-height:1.5}
+
+/* ── Toast ─────────────────────────────────────────── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:var(--r);font-size:13px;z-index:400;opacity:0;transform:translateY(10px);transition:all .2s;pointer-events:none;max-width:340px;box-shadow:0 8px 24px rgba(26,29,41,.15);display:flex;align-items:center;gap:8px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast i{color:var(--accent-2)}
+
+/* ── Footer ─────────────────────────────────────────── */
+.foot{padding:32px 28px 24px;text-align:center;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line);margin-top:24px}
+.foot a{color:var(--ink-2);font-weight:500}
+.foot .foot-mark{font-family:var(--font-display);font-style:italic;color:var(--accent-2);margin:0 2px}
+
+/* ── Settings menu ─────────────────────────────────────────── */
+.menu{position:relative}
+.menu-pop{position:absolute;top:calc(100% + 4px);right:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:6px;min-width:200px;box-shadow:0 8px 28px rgba(26,29,41,.12);z-index:50;display:none}
+.menu-pop.show{display:block}
+.menu-item{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:13px;color:var(--ink-2);border-radius:var(--r);width:100%;text-align:left;cursor:pointer;transition:background .12s}
+.menu-item:hover{background:var(--cream-2);color:var(--ink)}
+.menu-item.danger{color:var(--red)}
+.menu-item.danger:hover{background:var(--red-bg)}
+.menu-divider{height:1px;background:var(--line);margin:4px 0}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media(max-width:760px){
+  .col-hide{display:none}
+  .content{padding:16px}
+  .topbar{padding:0 16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat-num{font-size:22px}
+  .brand-tag{display:none}
+  .tab{padding:12px 12px}
+  .hero{padding:24px 20px}
+  .hero h1{font-size:22px}
+  .detail-row td{padding:16px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<footer class="foot">
+  Pipeline — open-source application tracker. Your data lives only in this browser. <a href="https://github.com" target="_blank" id="gh-link">Fork on GitHub</a> <span class="foot-mark">·</span> Built for researchers
+</footer>
+
+<script>
+// ═══════════════ CONSTANTS ═══════════════
+const PHD_STATUSES=['Researching','Emailed Prof','Applied','Interview','Offer','Rejected','Waitlist'];
+const JOB_STATUSES=['Saved','Applied','OA','Interview','Offer','Rejected'];
+const PRIORITIES=['High','Medium','Low'];
+const FIT_LEVELS=['Strong','Good','Moderate'];
+const JOB_TYPES=['Research','Data Scientist','ML Engineer','Postdoc','Industry','Other'];
+
+const STATUS_CLS={
+  'Researching':'s-Researching','Emailed Prof':'s-Emailed','Applied':'s-Applied',
+  'Interview':'s-Interview','Offer':'s-Offer','Rejected':'s-Rejected',
+  'Waitlist':'s-Waitlist','Saved':'s-Saved','OA':'s-OA'
+};
+
+// ═══════════════ EXAMPLE DATA (cleared on first user action) ═══════════════
+const EXAMPLE_PHD=[
+  {id:1,uni:'Example University',dept:'Department of Computer Science',prof:'Prof. Jane Doe',email:'jdoe@example.edu',fit:'Strong',deadline:'2025-12-15',status:'Researching',priority:'High',topic:'Example research alignment — replace with your own',labUrl:'https://example.edu/lab',notes:'This is example data. Click the menu (top right) to clear all and start fresh.',comments:[{text:'Example log entry — these track your activity per application.',date:'01 Jun 2025'}]},
+  {id:2,uni:'Sample Institute of Technology',dept:'Materials Science',prof:'Dr. John Smith',email:'',fit:'Good',deadline:'2026-01-10',status:'Emailed Prof',priority:'High',topic:'Replace with the topic match for your target lab',labUrl:'',notes:'Example — edit or delete this entry.',comments:[]},
+  {id:3,uni:'Demo State University',dept:'Engineering',prof:'',email:'',fit:'Moderate',deadline:'2026-03-01',status:'Researching',priority:'Medium',topic:'',labUrl:'',notes:'',comments:[]},
+];
+const EXAMPLE_JOBS=[
+  {id:1,company:'Example Research Lab',role:'Research Scientist',type:'Research',applied:'',status:'Saved',contact:'',link:'',notes:'Example entry — click the menu to clear all and add your own.',comments:[]},
+  {id:2,company:'Sample Tech Co.',role:'Data Scientist',type:'Data Scientist',applied:'',status:'Saved',contact:'',link:'',notes:'',comments:[]},
+];
+
+// ═══════════════ STATE ═══════════════
+const HAS_SEEN_INTRO='pipeline_seen_intro_v1';
+let S={
+  tab:'phd',
+  phd: loadData('pipeline_phd_v1') || EXAMPLE_PHD.map(x=>({...x,comments:[...(x.comments||[])]})),
+  jobs: loadData('pipeline_jobs_v1') || EXAMPLE_JOBS.map(x=>({...x,comments:[...(x.comments||[])]})),
+  modal:null, editItem:null,
+  expandedRow:null,
+  sortKey:'',sortDir:1,
+  filterStatus:'All',filterPriority:'All',filterSearch:'',
+  showIntro: !localStorage.getItem(HAS_SEEN_INTRO),
+  menuOpen:false,
+};
+
+function loadData(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
+function saveData(){
+  try{
+    localStorage.setItem('pipeline_phd_v1',JSON.stringify(S.phd));
+    localStorage.setItem('pipeline_jobs_v1',JSON.stringify(S.jobs));
+  }catch(e){toast('Storage error — data may not be saved.')}
+}
+
+// ═══════════════ HELPERS ═══════════════
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(d){return d?new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'—'}
+function todayStr(){return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+function daysLeft(dl){
+  if(!dl) return'<span style="color:var(--ink-4);font-size:11px;font-family:var(--font-mono)">—</span>';
+  const d=Math.ceil((new Date(dl)-Date.now())/(864e5));
+  if(d<0) return`<span class="days-badge days-past">passed</span>`;
+  if(d===0) return`<span class="days-badge days-urgent">today!</span>`;
+  if(d<=14) return`<span class="days-badge days-urgent">${d}d left</span>`;
+  if(d<=60) return`<span class="days-badge days-soon">${d}d</span>`;
+  return`<span class="days-badge days-ok">${d}d</span>`;
+}
+function statusBadge(s){return`<span class="badge ${STATUS_CLS[s]||'s-Saved'}">${esc(s)}</span>`}
+function priorityBadge(p){return p?`<span class="badge p-${esc(p)}">${esc(p)}</span>`:'<span style="color:var(--ink-4)">—</span>'}
+function fitBadge(f){return f?`<span class="badge f-${esc(f)}">${esc(f)}</span>`:'<span style="color:var(--ink-4)">—</span>'}
+function toast(msg,icon='ti-check'){
+  const t=document.getElementById('toast');
+  t.innerHTML=`<i class="ti ${icon}"></i>${esc(msg)}`;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ═══════════════ QUICK PASTE (regex-based, zero-cost) ═══════════════
+function quickPaste(rawText, isPhd){
+  const text = (rawText||'').replace(/\s+/g,' ').trim();
+  if(!text) return null;
+
+  const out={};
+
+  // Email — most reliable
+  const emailMatch=text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if(emailMatch) out.email=emailMatch[0];
+
+  // URL — first http(s):// url
+  const urlMatch=text.match(/https?:\/\/[^\s<>"'\)]+/);
+  if(urlMatch){
+    let u=urlMatch[0].replace(/[.,;:!?]+$/,'');
+    if(isPhd) out.labUrl=u; else out.link=u;
+  }
+
+  // Dates: ISO (2025-12-15), DD/MM/YYYY, DD Month YYYY, Month DD, YYYY
+  const months='January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec';
+  let dt=null;
+  let m;
+  if((m=text.match(/\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b/))){
+    dt=`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
+  } else if((m=text.match(new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(${months})\\s+(20\\d{2})\\b`,'i')))){
+    const monIdx=parseMonth(m[2]);
+    if(monIdx) dt=`${m[3]}-${monIdx}-${m[1].padStart(2,'0')}`;
+  } else if((m=text.match(new RegExp(`\\b(${months})\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(20\\d{2})\\b`,'i')))){
+    const monIdx=parseMonth(m[1]);
+    if(monIdx) dt=`${m[3]}-${monIdx}-${m[2].padStart(2,'0')}`;
+  } else if((m=text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](20\d{2})\b/))){
+    // Assume DD/MM/YYYY for non-US
+    dt=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  }
+  if(dt){
+    if(isPhd) out.deadline=dt;
+    else out.applied=dt;
+  }
+
+  // Professor name — patterns like "Prof. First Last" or "Dr. First Last"
+  if(isPhd){
+    const profMatch=text.match(/\b(Prof|Professor|Dr|Doctor)\.?\s+([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){1,3})/);
+    if(profMatch) out.prof=`${profMatch[1].replace(/\.$/,'')}. ${profMatch[2]}`.replace('Doctor.','Dr.').replace('Professor.','Prof.');
+
+    // University — look for known patterns
+    const uniMatch=text.match(/\b([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){0,4})\s+(University|Institute of Technology|Institute|College)\b/);
+    if(uniMatch) out.uni=`${uniMatch[1]} ${uniMatch[2]}`;
+    else {
+      const uniMatch2=text.match(/\b(University|Institute) of ([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){0,3})\b/);
+      if(uniMatch2) out.uni=`${uniMatch2[1]} of ${uniMatch2[2]}`;
+    }
+
+    // Department — look for "Department of X" or "School of X"
+    const deptMatch=text.match(/\b(Department|School|Faculty|Institute) of ([A-Z][a-zA-Z& ,'\-]+?)(?:\.|,|;|$|\s+at\s)/);
+    if(deptMatch) out.dept=`${deptMatch[1]} of ${deptMatch[2].trim()}`;
+  } else {
+    // Company — heuristic: first word(s) that look like a company near "at" or capitalised pattern
+    const compMatch=text.match(/\b(?:at|join|with)\s+([A-Z][a-zA-Z0-9&\.\- ]{2,30}?)(?:\s+(?:as|for|to|is|are|in|on|—|-)\s|[\.,;])/);
+    if(compMatch) out.company=compMatch[1].trim();
+
+    // Role — common job titles
+    const roleMatch=text.match(/\b(Research Scientist|Research Engineer|Data Scientist|ML Engineer|Machine Learning Engineer|Software Engineer|Postdoctoral Researcher|Postdoc|Research Associate|Senior Engineer|Junior Engineer|Principal Researcher|Research Intern|Software Developer|Applied Scientist|PhD Researcher)\b/i);
+    if(roleMatch){
+      out.role=roleMatch[1].split(' ').map(w=>w[0].toUpperCase()+w.slice(1).toLowerCase()).join(' ');
+      // Map to type if possible
+      const r=roleMatch[1].toLowerCase();
+      if(r.includes('research scientist')||r.includes('research engineer')||r.includes('applied scientist')||r.includes('research intern')) out.type='Research';
+      else if(r.includes('data scientist')) out.type='Data Scientist';
+      else if(r.includes('ml')||r.includes('machine learning')) out.type='ML Engineer';
+      else if(r.includes('postdoc')) out.type='Postdoc';
+    }
+  }
+
+  // Notes: first 200 chars cleaned
+  const cleaned=text.slice(0,250).trim();
+  if(cleaned.length>30) out.notes=cleaned + (text.length>250?'…':'');
+
+  return out;
+}
+
+function parseMonth(name){
+  const map={january:'01',february:'02',march:'03',april:'04',may:'05',june:'06',july:'07',august:'08',september:'09',october:'10',november:'11',december:'12',jan:'01',feb:'02',mar:'03',apr:'04',jun:'06',jul:'07',aug:'08',sep:'09',sept:'09',oct:'10',nov:'11',dec:'12'};
+  return map[name.toLowerCase()];
+}
+
+function applyQuickPaste(parsed, isPhd){
+  if(!parsed) return 0;
+  let filled=0;
+  const set=(id,val)=>{
+    const el=document.getElementById(id);
+    if(el && val && !el.value){el.value=val;filled++;}
+  };
+  if(isPhd){
+    set('f-uni',parsed.uni);set('f-dept',parsed.dept);set('f-prof',parsed.prof);
+    set('f-email',parsed.email);set('f-deadline',parsed.deadline);
+    set('f-labUrl',parsed.labUrl);set('f-notes',parsed.notes);
+  } else {
+    set('f-company',parsed.company);set('f-role',parsed.role);
+    if(parsed.type){const s=document.getElementById('f-type');if(s&&!s.value){s.value=parsed.type;filled++;}}
+    set('f-applied',parsed.applied);
+    set('f-link',parsed.link);set('f-notes',parsed.notes);
+  }
+  return filled;
+}
+
+// ═══════════════ FILTERS & SORT ═══════════════
+function applyFilters(items){
+  const q=S.filterSearch.toLowerCase();
+  return items.filter(x=>{
+    const fs=S.filterStatus==='All'||x.status===S.filterStatus;
+    const fp=S.filterPriority==='All'||x.priority===S.filterPriority;
+    const fq=!q||JSON.stringify(x).toLowerCase().includes(q);
+    return fs&&fp&&fq;
+  });
+}
+function sortItems(items){
+  if(!S.sortKey) return items;
+  return [...items].sort((a,b)=>{
+    let av=a[S.sortKey]||'';let bv=b[S.sortKey]||'';
+    if(S.sortKey==='deadline'||S.sortKey==='applied'){
+      av=av?new Date(av).getTime():Infinity;
+      bv=bv?new Date(bv).getTime():Infinity;
+      return (av-bv)*S.sortDir;
+    }
+    av=av.toString().toLowerCase();bv=bv.toString().toLowerCase();
+    return av<bv?-S.sortDir:av>bv?S.sortDir:0;
+  });
+}
+
+// ═══════════════ BUILD UI ═══════════════
+function buildHero(){
+  if(!S.showIntro) return '';
+  return`<div class="hero show" id="hero">
+    <button class="hero-close" id="hero-close" aria-label="Dismiss"><i class="ti ti-x"></i></button>
+    <div class="hero-eyebrow">Pipeline · open-source</div>
+    <h1>Track your applications<br>without the <em>spreadsheet chaos</em>.</h1>
+    <p>A clean, fast tracker for PhD applications and research jobs. No accounts, no cloud, no tracking — your data lives only in this browser. Fork it on GitHub to deploy your own copy.</p>
+    <div class="hero-actions">
+      <button class="btn btn-accent" id="start-fresh">Clear example data &amp; start fresh</button>
+      <button class="btn btn-ghost" id="hero-dismiss">Keep examples for now</button>
+    </div>
+  </div>`;
+}
+
+function buildStats(){
+  const isPhd=S.tab==='phd';
+  const items=isPhd?S.phd:S.jobs;
+  const total=items.length;
+  const active=items.filter(x=>!['Rejected','Offer'].includes(x.status)).length;
+  const offers=items.filter(x=>x.status==='Offer').length;
+  const interviews=items.filter(x=>x.status==='Interview').length;
+  const nextDeadline=items.filter(x=>x.deadline&&new Date(x.deadline)>=new Date()).sort((a,b)=>new Date(a.deadline)-new Date(b.deadline))[0];
+  const nextDays=nextDeadline?Math.ceil((new Date(nextDeadline.deadline)-Date.now())/(864e5)):null;
+
+  const extra = isPhd
+    ? `<div class="stat"><div class="stat-label">Profs contacted</div><div class="stat-num">${items.filter(x=>x.status==='Emailed Prof').length}</div></div>
+       <div class="stat"><div class="stat-label">High priority</div><div class="stat-num">${items.filter(x=>x.priority==='High').length}</div></div>`
+    : `<div class="stat"><div class="stat-label">Interviews</div><div class="stat-num">${interviews}</div></div>`;
+
+  const nextStat = isPhd && nextDeadline
+    ? `<div class="stat"><div class="stat-label">Next deadline</div><div class="stat-num" style="font-size:16px;line-height:1.2">${esc(nextDeadline.uni)}</div><div class="stat-sub">${nextDays} days · ${fmtDate(nextDeadline.deadline)}</div></div>`
+    : '';
+
+  return`<div class="stats">
+    <div class="stat"><div class="stat-label">Total</div><div class="stat-num">${total}</div></div>
+    <div class="stat"><div class="stat-label">In progress</div><div class="stat-num">${active}</div></div>
+    ${extra}
+    <div class="stat"><div class="stat-label">Offers</div><div class="stat-num">${offers}</div></div>
+    ${nextStat}
+  </div>`;
+}
+
+function buildToolbar(){
+  const isPhd=S.tab==='phd';
+  const statuses=isPhd?PHD_STATUSES:JOB_STATUSES;
+  const filtered=applyFilters(isPhd?S.phd:S.jobs);
+  const statusOpts=`<option value="All">All statuses</option>${statuses.map(s=>`<option${S.filterStatus===s?' selected':''}>${esc(s)}</option>`).join('')}`;
+  const prioOpts=`<option value="All">All priorities</option>${PRIORITIES.map(p=>`<option${S.filterPriority===p?' selected':''}>${esc(p)}</option>`).join('')}`;
+  return`<div class="toolbar">
+    <div class="search-wrap">
+      <i class="ti ti-search"></i>
+      <input id="search-inp" type="text" placeholder="Search by university, professor, role…" value="${esc(S.filterSearch)}">
+    </div>
+    <select class="flt" id="status-flt">${statusOpts}</select>
+    ${isPhd?`<select class="flt" id="priority-flt">${prioOpts}</select>`:''}
+    <span class="count-lbl">${filtered.length} of ${(isPhd?S.phd:S.jobs).length}</span>
+  </div>`;
+}
+
+function buildTable(){
+  const isPhd=S.tab==='phd';
+  const filtered=sortItems(applyFilters(isPhd?S.phd:S.jobs));
+  if(!filtered.length){
+    const items=isPhd?S.phd:S.jobs;
+    const isEmpty=items.length===0;
+    return`<div class="table-wrap"><div class="empty">
+      <i class="ti ${isEmpty?'ti-pencil-plus':'ti-filter-off'}"></i>
+      <div class="empty-title">${isEmpty?'Nothing here yet':'No matches'}</div>
+      <p>${isEmpty?'Add your first '+(isPhd?'PhD application':'job application')+' to get started.':'Try adjusting your filters or search.'}</p>
+    </div></div>`;
+  }
+
+  const th=(label,key,hide)=>`<th class="${hide?'col-hide':''}" onclick="doSort('${key}')">${label}<span class="sort-arrow">${S.sortKey===key?(S.sortDir===1?'↑':'↓'):''}</span></th>`;
+  let rows='';
+  filtered.forEach(item=>{
+    const isExp=S.expandedRow===item.id;
+    const expCls=isExp?' expanded':'';
+    if(isPhd){
+      rows+=`<tr class="item-row${expCls}" data-id="${item.id}">
+        <td><div class="cell-main">${esc(item.uni)}</div><div class="cell-sub">${esc(item.dept||'')}</div></td>
+        <td class="col-hide"><div class="cell-main" style="font-weight:400">${esc(item.prof||'—')}</div>${item.email?`<div class="cell-link"><a href="mailto:${esc(item.email)}" onclick="event.stopPropagation()">${esc(item.email)}</a></div>`:''}</td>
+        <td>${statusBadge(item.status)}</td>
+        <td>${priorityBadge(item.priority)}</td>
+        <td class="col-hide">${fitBadge(item.fit)}</td>
+        <td>${daysLeft(item.deadline)}<div class="cell-sub" style="margin-top:4px">${fmtDate(item.deadline)}</div></td>
+        <td class="col-hide" style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--ink-3)">${esc(item.topic||'—')}</td>
+        <td><div class="row-actions">
+          <button class="icon-btn edit-btn" data-id="${item.id}" title="Edit"><i class="ti ti-edit"></i></button>
+          <button class="icon-btn del-btn" data-id="${item.id}" title="Delete"><i class="ti ti-trash"></i></button>
+        </div></td>
+      </tr>${isExp?buildDetailRow(item,true):''}`;
+    } else {
+      rows+=`<tr class="item-row${expCls}" data-id="${item.id}">
+        <td><div class="cell-main">${esc(item.company)}</div><div class="cell-sub">${esc(item.type||'')}</div></td>
+        <td><div class="cell-main" style="font-weight:400">${esc(item.role)}</div>${item.link?`<div class="cell-link"><a href="${esc(item.link)}" target="_blank" onclick="event.stopPropagation()">Open listing ↗</a></div>`:''}</td>
+        <td>${statusBadge(item.status)}</td>
+        <td class="col-hide" style="font-family:var(--font-mono);font-size:12px;color:var(--ink-3)">${fmtDate(item.applied)}</td>
+        <td class="col-hide" style="font-size:12px;color:var(--ink-3)">${esc(item.contact||'—')}</td>
+        <td><div class="row-actions">
+          <button class="icon-btn edit-btn" data-id="${item.id}" title="Edit"><i class="ti ti-edit"></i></button>
+          <button class="icon-btn del-btn" data-id="${item.id}" title="Delete"><i class="ti ti-trash"></i></button>
+        </div></td>
+      </tr>${isExp?buildDetailRow(item,false):''}`;
+    }
+  });
+
+  const thead = isPhd
+    ? `<tr>${th('University','uni',false)}${th('Professor','prof',true)}${th('Status','status',false)}${th('Priority','priority',false)}${th('Fit','fit',true)}${th('Deadline','deadline',false)}${th('Topic','topic',true)}<th style="width:64px"></th></tr>`
+    : `<tr>${th('Company','company',false)}${th('Role','role',false)}${th('Status','status',false)}${th('Applied','applied',true)}${th('Contact','contact',true)}<th style="width:64px"></th></tr>`;
+
+  return`<div class="table-wrap"><table><thead>${thead}</thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function buildDetailRow(item,isPhd){
+  const comments=item.comments||[];
+  const cHtml=comments.length
+    ?`<div class="comment-list">${comments.map(c=>`<div class="comment-item">${esc(c.text)}<span class="comment-date">${esc(c.date)}</span></div>`).join('')}</div>`
+    :'<div style="font-size:12.5px;color:var(--ink-4);margin-bottom:10px;font-style:italic">No log entries yet — track your follow-ups, prof replies, interview feedback, anything.</div>';
+  const cols=isPhd?8:6;
+  const fields=isPhd?`
+    <div class="detail-field"><div class="dk">University</div><div class="dv">${esc(item.uni)}</div></div>
+    <div class="detail-field"><div class="dk">Department</div><div class="dv">${esc(item.dept||'—')}</div></div>
+    <div class="detail-field"><div class="dk">Professor</div><div class="dv">${esc(item.prof||'—')}</div></div>
+    <div class="detail-field"><div class="dk">Email</div><div class="dv">${item.email?`<a href="mailto:${esc(item.email)}">${esc(item.email)}</a>`:'—'}</div></div>
+    <div class="detail-field"><div class="dk">Deadline</div><div class="dv">${fmtDate(item.deadline)}</div></div>
+    <div class="detail-field"><div class="dk">Status</div><div class="dv">${statusBadge(item.status)}</div></div>
+    <div class="detail-field"><div class="dk">Priority</div><div class="dv">${priorityBadge(item.priority)}</div></div>
+    <div class="detail-field"><div class="dk">Research fit</div><div class="dv">${fitBadge(item.fit)}</div></div>
+    ${item.labUrl?`<div class="detail-field" style="grid-column:1/-1"><div class="dk">Lab URL</div><div class="dv"><a href="${esc(item.labUrl)}" target="_blank">${esc(item.labUrl)}</a></div></div>`:''}
+    <div class="detail-field" style="grid-column:1/-1"><div class="dk">Research topic match</div><div class="dv">${esc(item.topic||'—')}</div></div>
+    <div class="detail-field" style="grid-column:1/-1"><div class="dk">Notes</div><div class="dv" style="white-space:pre-wrap;line-height:1.6">${esc(item.notes||'—')}</div></div>
+  `:`
+    <div class="detail-field"><div class="dk">Company</div><div class="dv">${esc(item.company)}</div></div>
+    <div class="detail-field"><div class="dk">Role</div><div class="dv">${esc(item.role)}</div></div>
+    <div class="detail-field"><div class="dk">Type</div><div class="dv">${esc(item.type||'—')}</div></div>
+    <div class="detail-field"><div class="dk">Status</div><div class="dv">${statusBadge(item.status)}</div></div>
+    <div class="detail-field"><div class="dk">Date applied</div><div class="dv">${fmtDate(item.applied)}</div></div>
+    <div class="detail-field"><div class="dk">Contact</div><div class="dv">${esc(item.contact||'—')}</div></div>
+    ${item.link?`<div class="detail-field" style="grid-column:1/-1"><div class="dk">Job listing</div><div class="dv"><a href="${esc(item.link)}" target="_blank">${esc(item.link)}</a></div></div>`:''}
+    <div class="detail-field" style="grid-column:1/-1"><div class="dk">Notes</div><div class="dv" style="white-space:pre-wrap;line-height:1.6">${esc(item.notes||'—')}</div></div>
+  `;
+  return`<tr class="detail-row"><td colspan="${cols}">
+    <div class="detail-grid">${fields}</div>
+    <div class="detail-section">
+      <div class="section-lbl">Activity log</div>
+      ${cHtml}
+      <div class="comment-wrap">
+        <input id="cinp-${item.id}" type="text" placeholder="Add a log entry — replies, interviews, follow-ups…" onkeydown="if(event.key==='Enter')addComment(${item.id})">
+        <button class="btn btn-ghost btn-sm" onclick="addComment(${item.id})">Add note</button>
+      </div>
+    </div>
+  </td></tr>`;
+}
+
+function buildModal(){
+  const isPhd=S.modal.includes('phd');
+  const isEdit=S.modal.startsWith('edit');
+  const d=isEdit&&S.editItem?S.editItem:{};
+  const v=(k)=>esc(d[k]||'');
+  const selOpts=(arr,cur)=>arr.map(x=>`<option${cur===x?' selected':''}>${esc(x)}</option>`).join('');
+
+  const qpBox=`
+    <div class="qp-box">
+      <div class="qp-header">
+        <i class="ti ti-clipboard-text"></i>
+        <div class="qp-title">Quick Paste</div>
+      </div>
+      <textarea id="qp-text" placeholder="Paste text from a lab page, programme page, or job listing — emails, deadlines, prof names, URLs will be auto-extracted."></textarea>
+      <div class="qp-actions">
+        <button class="btn btn-ghost btn-sm" id="qp-btn"><i class="ti ti-wand"></i> Extract fields</button>
+        <div class="qp-status" id="qp-status"></div>
+      </div>
+      <div class="qp-hint">Free, runs entirely in your browser. Extracts emails, URLs, dates, professor names, departments. Anything it misses, fill in manually below.</div>
+    </div>`;
+
+  const phdForm=`
+    ${qpBox}
+    <div class="form-row">
+      <div class="form-group"><label>University <span style="color:var(--accent-2)">*</span></label><input id="f-uni" value="${v('uni')}" placeholder="e.g. MIT" autofocus></div>
+      <div class="form-group"><label>Department</label><input id="f-dept" value="${v('dept')}" placeholder="e.g. Materials Science"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Professor</label><input id="f-prof" value="${v('prof')}" placeholder="Prof. First Last"></div>
+      <div class="form-group"><label>Email</label><input id="f-email" type="email" value="${v('email')}" placeholder="prof@uni.edu"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(PHD_STATUSES,d.status||'Researching')}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Priority</label><select id="f-priority"><option value="">—</option>${selOpts(PRIORITIES,d.priority)}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Research fit</label><select id="f-fit"><option value="">—</option>${selOpts(FIT_LEVELS,d.fit)}</select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Application deadline</label><input id="f-deadline" type="date" value="${v('deadline')}"></div>
+      <div class="form-group"><label>Lab / group URL</label><input id="f-labUrl" value="${v('labUrl')}" placeholder="https://lab.uni.edu"></div>
+    </div>
+    <div class="form-group"><label>Research topic match</label><input id="f-topic" value="${v('topic')}" placeholder="One line — what in their work aligns with yours?"></div>
+    <div class="form-group"><label>Notes</label><textarea id="f-notes">${v('notes')}</textarea></div>`;
+
+  const jobForm=`
+    ${qpBox}
+    <div class="form-row">
+      <div class="form-group"><label>Company <span style="color:var(--accent-2)">*</span></label><input id="f-company" value="${v('company')}" placeholder="e.g. Microsoft Research" autofocus></div>
+      <div class="form-group"><label>Role <span style="color:var(--accent-2)">*</span></label><input id="f-role" value="${v('role')}" placeholder="e.g. Research Scientist"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:0.5"><label>Type</label><select id="f-type"><option value="">—</option>${selOpts(JOB_TYPES,d.type)}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(JOB_STATUSES,d.status||'Saved')}</select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Date applied</label><input id="f-applied" type="date" value="${v('applied')}"></div>
+      <div class="form-group"><label>Contact</label><input id="f-contact" value="${v('contact')}" placeholder="Name or title"></div>
+    </div>
+    <div class="form-group"><label>Job listing URL</label><input id="f-link" value="${v('link')}" placeholder="https://"></div>
+    <div class="form-group"><label>Notes</label><textarea id="f-notes">${v('notes')}</textarea></div>`;
+
+  return`<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow">${isPhd?'PhD application':'Job application'}</div>
+          <div class="modal-title">${isEdit?'Edit entry':(isPhd?'Add a PhD target':'Add a job application')}</div>
+        </div>
+        <button class="icon-btn" id="modal-close" aria-label="Close"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">${isPhd?phdForm:jobForm}</div>
+      <div class="modal-footer">
+        ${isEdit?`<button class="btn btn-danger btn-sm" id="del-modal-btn"><i class="ti ti-trash"></i> Delete</button>`:''}
+        <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="modal-save">${isEdit?'Save changes':'Add entry'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════ MAIN RENDER ═══════════════
+function render(){
+  const isPhd=S.tab==='phd';
+  const modal=S.modal?buildModal():'';
+  document.getElementById('app').innerHTML=`
+    ${modal}
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+        <div class="brand">
+          <div class="brand-mark">P</div>
+          <div>
+            <div class="brand-name">Pipeline</div>
+            <div class="brand-tag">PhD &amp; job applications</div>
+          </div>
+        </div>
+        <nav class="tabs">
+          <button class="tab${S.tab==='phd'?' active':''}" data-tab="phd">
+            <i class="ti ti-school"></i>PhD <span class="tab-count">${S.phd.length}</span>
+          </button>
+          <button class="tab${S.tab==='jobs'?' active':''}" data-tab="jobs">
+            <i class="ti ti-briefcase"></i>Jobs <span class="tab-count">${S.jobs.length}</span>
+          </button>
+        </nav>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" id="add-btn"><i class="ti ti-plus"></i> Add ${isPhd?'PhD':'Job'}</button>
+        <div class="menu">
+          <button class="btn btn-ghost btn-sm" id="menu-btn" aria-label="Menu"><i class="ti ti-dots-vertical"></i></button>
+          <div class="menu-pop${S.menuOpen?' show':''}" id="menu-pop">
+            <button class="menu-item" id="export-btn"><i class="ti ti-download"></i> Export CSV</button>
+            <button class="menu-item" id="import-btn"><i class="ti ti-upload"></i> Import JSON backup</button>
+            <button class="menu-item" id="backup-btn"><i class="ti ti-archive"></i> Download JSON backup</button>
+            <div class="menu-divider"></div>
+            <button class="menu-item" id="intro-btn"><i class="ti ti-info-circle"></i> Show intro</button>
+            <button class="menu-item danger" id="clear-btn"><i class="ti ti-trash"></i> Clear all data</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="content">
+      ${buildHero()}
+      ${buildStats()}
+      ${buildToolbar()}
+      <div id="table-area">${buildTable()}</div>
+    </main>`;
+  attachEvents();
+}
+
+function renderTable(){
+  document.getElementById('table-area').innerHTML=buildTable();
+  attachTableEvents();
+}
+
+// ═══════════════ EVENTS ═══════════════
+function attachEvents(){
+  document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
+    S.tab=btn.dataset.tab;S.filterStatus='All';S.filterPriority='All';S.filterSearch='';S.expandedRow=null;S.sortKey='';
+    render();
+  }));
+  document.getElementById('add-btn')?.addEventListener('click',()=>{S.modal='add-'+(S.tab==='phd'?'phd':'jobs');S.editItem=null;render();});
+  document.getElementById('menu-btn')?.addEventListener('click',e=>{e.stopPropagation();S.menuOpen=!S.menuOpen;render();});
+  document.getElementById('export-btn')?.addEventListener('click',exportCSV);
+  document.getElementById('backup-btn')?.addEventListener('click',backupJSON);
+  document.getElementById('import-btn')?.addEventListener('click',importJSON);
+  document.getElementById('clear-btn')?.addEventListener('click',clearAll);
+  document.getElementById('intro-btn')?.addEventListener('click',()=>{S.showIntro=true;S.menuOpen=false;localStorage.removeItem(HAS_SEEN_INTRO);render();});
+  document.getElementById('hero-close')?.addEventListener('click',dismissHero);
+  document.getElementById('hero-dismiss')?.addEventListener('click',dismissHero);
+  document.getElementById('start-fresh')?.addEventListener('click',()=>{
+    S.phd=[];S.jobs=[];saveData();dismissHero();toast('Cleared example data. Start fresh!');render();
+  });
+  document.getElementById('search-inp')?.addEventListener('input',e=>{S.filterSearch=e.target.value;renderTable();});
+  document.getElementById('status-flt')?.addEventListener('change',e=>{S.filterStatus=e.target.value;renderTable();});
+  document.getElementById('priority-flt')?.addEventListener('change',e=>{S.filterPriority=e.target.value;renderTable();});
+  // Click-outside for menu
+  document.addEventListener('click',e=>{
+    if(S.menuOpen&&!e.target.closest('.menu')){S.menuOpen=false;render();}
+  },{once:S.menuOpen});
+  attachModalEvents();
+  attachTableEvents();
+}
+
+function dismissHero(){
+  S.showIntro=false;localStorage.setItem(HAS_SEEN_INTRO,'1');render();
+}
+
+function attachTableEvents(){
+  document.querySelectorAll('.item-row').forEach(row=>{
+    row.addEventListener('click',e=>{
+      if(e.target.closest('.icon-btn')||e.target.closest('a')) return;
+      const id=+row.dataset.id;
+      S.expandedRow=S.expandedRow===id?null:id;
+      renderTable();
+    });
+  });
+  document.querySelectorAll('.edit-btn').forEach(btn=>btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const id=+btn.dataset.id;
+    const isPhd=S.tab==='phd';
+    S.editItem=(isPhd?S.phd:S.jobs).find(x=>x.id===id);
+    S.modal='edit-'+(isPhd?'phd':'jobs');
+    render();
+  }));
+  document.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(!confirm('Delete this entry? This cannot be undone.')) return;
+    const id=+btn.dataset.id;
+    if(S.tab==='phd') S.phd=S.phd.filter(x=>x.id!==id);
+    else S.jobs=S.jobs.filter(x=>x.id!==id);
+    saveData();renderTable();toast('Entry deleted','ti-trash');
+  }));
+}
+
+function attachModalEvents(){
+  const close=()=>{S.modal=null;S.editItem=null;render();};
+  document.getElementById('modal-bg')?.addEventListener('click',e=>{if(e.target.id==='modal-bg')close();});
+  document.getElementById('modal-close')?.addEventListener('click',close);
+  document.getElementById('modal-cancel')?.addEventListener('click',close);
+  document.getElementById('del-modal-btn')?.addEventListener('click',()=>{
+    if(!confirm('Delete this entry? This cannot be undone.')) return;
+    const id=S.editItem.id;
+    if(S.tab==='phd') S.phd=S.phd.filter(x=>x.id!==id);
+    else S.jobs=S.jobs.filter(x=>x.id!==id);
+    saveData();S.modal=null;S.editItem=null;render();toast('Entry deleted','ti-trash');
+  });
+  document.getElementById('qp-btn')?.addEventListener('click',()=>{
+    const raw=document.getElementById('qp-text')?.value||'';
+    const isPhd=S.modal.includes('phd');
+    if(!raw.trim()){toast('Paste some text first','ti-info-circle');return;}
+    const parsed=quickPaste(raw,isPhd);
+    const filled=applyQuickPaste(parsed,isPhd);
+    const statusEl=document.getElementById('qp-status');
+    if(filled){
+      statusEl.innerHTML=`<i class="ti ti-check"></i> Filled ${filled} field${filled>1?'s':''} — review &amp; adjust below`;
+    } else {
+      statusEl.innerHTML=`<span style="color:var(--ink-3)"><i class="ti ti-info-circle"></i> Nothing matched — try fuller text or fill manually</span>`;
+    }
+  });
+  document.getElementById('modal-save')?.addEventListener('click',()=>{
+    const isPhd=S.modal.includes('phd');
+    const isEdit=S.modal.startsWith('edit');
+    const g=id=>(document.getElementById(id)?.value||'').trim();
+    if(isPhd&&!g('f-uni')){alert('University is required.');return;}
+    if(!isPhd&&(!g('f-company')||!g('f-role'))){alert('Company and Role are required.');return;}
+    const item=isPhd?{
+      uni:g('f-uni'),dept:g('f-dept'),prof:g('f-prof'),email:g('f-email'),
+      status:g('f-status')||'Researching',priority:g('f-priority'),fit:g('f-fit'),
+      deadline:g('f-deadline'),labUrl:g('f-labUrl'),topic:g('f-topic'),notes:g('f-notes'),
+    }:{
+      company:g('f-company'),role:g('f-role'),type:g('f-type'),
+      status:g('f-status')||'Saved',applied:g('f-applied'),
+      contact:g('f-contact'),link:g('f-link'),notes:g('f-notes'),
+    };
+    if(isEdit&&S.editItem){
+      const arr=isPhd?S.phd:S.jobs;
+      const idx=arr.findIndex(x=>x.id===S.editItem.id);
+      arr[idx]={...arr[idx],...item};
+    } else {
+      item.id=Date.now()+Math.floor(Math.random()*1000);item.comments=[];
+      if(isPhd) S.phd.unshift(item);else S.jobs.unshift(item);
+    }
+    saveData();S.modal=null;S.editItem=null;render();
+    toast(isEdit?'Changes saved':'Entry added');
+  });
+}
+
+function addComment(id){
+  const inp=document.getElementById('cinp-'+id);
+  if(!inp||!inp.value.trim()) return;
+  const arr=S.tab==='phd'?S.phd:S.jobs;
+  const item=arr.find(x=>x.id===id);
+  if(!item) return;
+  if(!item.comments) item.comments=[];
+  item.comments.unshift({text:inp.value.trim(),date:todayStr()});
+  saveData();renderTable();toast('Note added');
+}
+
+function doSort(key){
+  if(S.sortKey===key) S.sortDir*=-1;
+  else{S.sortKey=key;S.sortDir=1;}
+  renderTable();
+}
+
+// ═══════════════ DATA OPS ═══════════════
+function exportCSV(){
+  const isPhd=S.tab==='phd';
+  const items=isPhd?S.phd:S.jobs;
+  if(!items.length){toast('Nothing to export','ti-info-circle');return;}
+  const keys=isPhd?['uni','dept','prof','email','status','priority','fit','deadline','topic','labUrl','notes']:['company','role','type','status','applied','contact','link','notes'];
+  const head=keys.join(',');
+  const rows=items.map(r=>keys.map(k=>`"${(r[k]||'').toString().replace(/"/g,'""').replace(/\n/g,' ')}"`).join(','));
+  const csv=[head,...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`pipeline_${isPhd?'phd':'jobs'}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('CSV exported');
+  S.menuOpen=false;render();
+}
+
+function backupJSON(){
+  const data={phd:S.phd,jobs:S.jobs,exportedAt:new Date().toISOString(),version:1};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`pipeline_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast('Backup downloaded');
+  S.menuOpen=false;render();
+}
+
+function importJSON(){
+  S.menuOpen=false;
+  const input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.phd||!data.jobs) throw new Error('Invalid file format');
+        if(!confirm(`This will replace your current data (${S.phd.length} PhD, ${S.jobs.length} jobs) with ${data.phd.length} PhD and ${data.jobs.length} jobs. Continue?`)) return;
+        S.phd=data.phd;S.jobs=data.jobs;saveData();render();
+        toast('Data imported');
+      }catch(err){alert('Invalid backup file: '+err.message);}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function clearAll(){
+  if(!confirm('Delete ALL your data permanently? Consider backing up first (Download JSON backup). This cannot be undone.')) return;
+  S.phd=[];S.jobs=[];S.menuOpen=false;saveData();render();
+  toast('All data cleared','ti-trash');
+}
+
+// expose globals for inline handlers
+window.addComment=addComment;
+window.doSort=doSort;
+
+// init
+render();
+</script>
+</body>
+</html>
