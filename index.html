@@ -228,6 +228,11 @@ tbody tr:last-child td{border-bottom:none}
 .qp-status{font-size:12px;color:var(--green);font-family:var(--font-mono);display:flex;align-items:center;gap:5px}
 .qp-hint{font-size:11px;color:var(--ink-3);margin-top:6px;line-height:1.5}
 
+/* ── Draft restored notice ─────────────────────────────────────────── */
+.draft-notice{background:var(--purple-bg);border:1px solid var(--purple);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+.draft-notice i{color:var(--purple);font-size:18px;flex-shrink:0}
+.draft-notice strong{color:var(--ink);font-weight:600}
+
 /* ── Toast ─────────────────────────────────────────── */
 .toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:var(--r);font-size:13px;z-index:400;opacity:0;transform:translateY(10px);transition:all .2s;pointer-events:none;max-width:340px;box-shadow:0 8px 24px rgba(26,29,41,.15);display:flex;align-items:center;gap:8px}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -1002,9 +1007,51 @@ function buildModal(){
   if(S.modal==='restore') return buildRestoreModal();
   const isPhd=S.modal.includes('phd');
   const isEdit=S.modal.startsWith('edit');
-  const d=isEdit&&S.editItem?S.editItem:{};
-  const v=(k)=>esc(d[k]||'');
+
+  // For Add mode, check for a saved draft
+  let draftData = null;
+  let hasDraft = false;
+  if(!isEdit){
+    const draftKey = `application_draft_${isPhd?'phd':'jobs'}_v1`;
+    try{
+      const raw = localStorage.getItem(draftKey);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        // Only consider non-empty drafts
+        const isEmpty = Object.values(parsed).every(v => !v || v === 'Researching' || v === 'Saved');
+        if(!isEmpty){
+          draftData = parsed;
+          hasDraft = true;
+        }
+      }
+    }catch(e){/* ignore */}
+  }
+
+  // For Edit, use the editItem; for Add with draft, use the draft; otherwise empty
+  const d = isEdit && S.editItem ? S.editItem : {};
+  const draftMap = isPhd
+    ? {'f-uni':'uni','f-dept':'dept','f-prof':'prof','f-email':'email','f-status':'status','f-priority':'priority','f-fit':'fit','f-deadline':'deadline','f-labUrl':'labUrl','f-topic':'topic','f-notes':'notes'}
+    : {'f-company':'company','f-role':'role','f-type':'type','f-status':'status','f-applied':'applied','f-contact':'contact','f-link':'link','f-notes':'notes'};
+  const fromDraft = (formId) => {
+    if(!hasDraft || !draftData) return null;
+    return draftData[formId] || null;
+  };
+  const v=(k)=>{
+    if(d[k]) return esc(d[k]);
+    // Try to find a matching form id from the draft
+    const formId = Object.entries(draftMap).find(([fid,key])=>key===k)?.[0];
+    if(formId && hasDraft && draftData[formId]) return esc(draftData[formId]);
+    return '';
+  };
   const selOpts=(arr,cur)=>arr.map(x=>`<option${cur===x?' selected':''}>${esc(x)}</option>`).join('');
+
+  // Helper to determine current value of selects (edit > draft > default)
+  const curSel = (k, defaultVal) => {
+    if(d[k]) return d[k];
+    const formId = Object.entries(draftMap).find(([fid,key])=>key===k)?.[0];
+    if(formId && hasDraft && draftData[formId]) return draftData[formId];
+    return defaultVal;
+  };
 
   const qpBox=`
     <div class="qp-box">
@@ -1020,7 +1067,18 @@ function buildModal(){
       <div class="qp-hint">Free, runs entirely in your browser. Extracts emails, URLs, dates, professor names, departments. Anything it misses, fill in manually below.</div>
     </div>`;
 
+  // Draft restored notice (only shown when an Add modal opens with a previous draft)
+  const draftNotice = hasDraft ? `
+    <div class="draft-notice">
+      <i class="ti ti-rotate-clockwise"></i>
+      <div style="flex:1">
+        <strong>Draft restored.</strong> We saved what you were typing last time. Edit and save when ready, or discard to start fresh.
+      </div>
+      <button class="btn btn-ghost btn-sm" id="discard-draft-btn"><i class="ti ti-x"></i> Discard draft</button>
+    </div>` : '';
+
   const phdForm=`
+    ${draftNotice}
     ${qpBox}
     <div class="form-row">
       <div class="form-group"><label>University <span style="color:var(--accent-2)">*</span></label><input id="f-uni" value="${v('uni')}" placeholder="e.g. MIT" autofocus></div>
@@ -1031,9 +1089,9 @@ function buildModal(){
       <div class="form-group"><label>Email</label><input id="f-email" type="email" value="${v('email')}" placeholder="prof@uni.edu"></div>
     </div>
     <div class="form-row">
-      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(PHD_STATUSES,d.status||'Researching')}</select></div>
-      <div class="form-group" style="flex:0.5"><label>Priority</label><select id="f-priority"><option value="">—</option>${selOpts(PRIORITIES,d.priority)}</select></div>
-      <div class="form-group" style="flex:0.5"><label>Research fit</label><select id="f-fit"><option value="">—</option>${selOpts(FIT_LEVELS,d.fit)}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(PHD_STATUSES,curSel('status','Researching'))}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Priority</label><select id="f-priority"><option value="">—</option>${selOpts(PRIORITIES,curSel('priority',''))}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Research fit</label><select id="f-fit"><option value="">—</option>${selOpts(FIT_LEVELS,curSel('fit',''))}</select></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Application deadline</label><input id="f-deadline" type="date" value="${v('deadline')}"></div>
@@ -1043,14 +1101,15 @@ function buildModal(){
     <div class="form-group"><label>Notes</label><textarea id="f-notes">${v('notes')}</textarea></div>`;
 
   const jobForm=`
+    ${draftNotice}
     ${qpBox}
     <div class="form-row">
       <div class="form-group"><label>Company <span style="color:var(--accent-2)">*</span></label><input id="f-company" value="${v('company')}" placeholder="e.g. Microsoft Research" autofocus></div>
       <div class="form-group"><label>Role <span style="color:var(--accent-2)">*</span></label><input id="f-role" value="${v('role')}" placeholder="e.g. Research Scientist"></div>
     </div>
     <div class="form-row">
-      <div class="form-group" style="flex:0.5"><label>Type</label><select id="f-type"><option value="">—</option>${selOpts(JOB_TYPES,d.type)}</select></div>
-      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(JOB_STATUSES,d.status||'Saved')}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Type</label><select id="f-type"><option value="">—</option>${selOpts(JOB_TYPES,curSel('type',''))}</select></div>
+      <div class="form-group" style="flex:0.5"><label>Status</label><select id="f-status">${selOpts(JOB_STATUSES,curSel('status','Saved'))}</select></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Date applied</label><input id="f-applied" type="date" value="${v('applied')}"></div>
@@ -1298,10 +1357,106 @@ function attachTableEvents(){
 }
 
 function attachModalEvents(){
-  const close=()=>{S.modal=null;S.editItem=null;S.restoreModal=null;render();};
-  document.getElementById('modal-bg')?.addEventListener('click',e=>{if(e.target.id==='modal-bg')close();});
-  document.getElementById('modal-close')?.addEventListener('click',close);
-  document.getElementById('modal-cancel')?.addEventListener('click',close);
+  const isFormModal = S.modal && (S.modal.startsWith('add-') || S.modal.startsWith('edit-'));
+  const isRestoreModal = S.modal === 'restore';
+
+  // ── Smart close: confirm if form has content ──
+  const formHasContent = () => {
+    if(!isFormModal) return false;
+    const inputs = document.querySelectorAll('.modal input, .modal select, .modal textarea');
+    for(const el of inputs){
+      // Skip Quick Paste textarea — it's a workspace, not "data"
+      if(el.id === 'qp-text') continue;
+      // Skip dropdowns at default values
+      if(el.tagName === 'SELECT'){
+        if(el.value && el.value !== '' && el.value !== 'Researching' && el.value !== 'Saved') return true;
+        continue;
+      }
+      if(el.value && el.value.trim() !== '') return true;
+    }
+    return false;
+  };
+
+  const close = (skipConfirm = false) => {
+    if(isFormModal && !skipConfirm && formHasContent()){
+      const isEdit = S.modal.startsWith('edit');
+      const msg = isEdit
+        ? 'You have unsaved changes. Discard them and close?'
+        : 'Close this form?\n\nYour draft is auto-saved — you can reopen "Add" later and continue from where you left off.';
+      if(!confirm(msg)) return;
+    }
+    if(isRestoreModal){
+      S.restoreModal = null;
+    }
+    S.modal = null;
+    S.editItem = null;
+    render();
+  };
+
+  // ── Backdrop click: only closes for non-form modals ──
+  // For Add/Edit forms, backdrop click does NOTHING — prevents accidental data loss.
+  // For the Restore modal (no typing involved), backdrop click closes as expected.
+  document.getElementById('modal-bg')?.addEventListener('click', e => {
+    if(e.target.id !== 'modal-bg') return; // clicked inside modal — ignore
+    if(isRestoreModal) close();
+    // Add/Edit modals: do nothing on backdrop click. User must use X or Cancel.
+  });
+  document.getElementById('modal-close')?.addEventListener('click', () => close());
+  document.getElementById('modal-cancel')?.addEventListener('click', () => close());
+
+  // ── Escape key respects unsaved state ──
+  if(isFormModal || isRestoreModal){
+    const escHandler = (e) => {
+      if(e.key === 'Escape'){
+        close();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  }
+
+  // ── Auto-save draft on input ──
+  if(isFormModal){
+    const draftKind = S.modal.includes('phd') ? 'phd' : 'jobs';
+    const isEdit = S.modal.startsWith('edit');
+    // Only auto-save drafts for ADD modals (editing existing entries shouldn't risk overwriting)
+    if(!isEdit){
+      const saveDraft = () => {
+        const formIds = draftKind === 'phd'
+          ? ['f-uni','f-dept','f-prof','f-email','f-status','f-priority','f-fit','f-deadline','f-labUrl','f-topic','f-notes']
+          : ['f-company','f-role','f-type','f-status','f-applied','f-contact','f-link','f-notes'];
+        const draft = {};
+        formIds.forEach(id => {
+          const el = document.getElementById(id);
+          if(el) draft[id] = el.value;
+        });
+        try{
+          localStorage.setItem(`application_draft_${draftKind}_v1`, JSON.stringify(draft));
+        }catch(e){/* ignore */}
+      };
+      // Debounce so we don't write on every keystroke
+      let saveTimer;
+      const debouncedSave = () => {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(saveDraft, 400);
+      };
+      document.querySelectorAll('.modal input, .modal select, .modal textarea').forEach(el => {
+        if(el.id === 'qp-text') return; // don't auto-save the Quick Paste workspace
+        el.addEventListener('input', debouncedSave);
+        el.addEventListener('change', debouncedSave);
+      });
+    }
+  }
+
+  // ── Discard draft button ──
+  document.getElementById('discard-draft-btn')?.addEventListener('click', () => {
+    if(!confirm('Discard the saved draft and start with an empty form?')) return;
+    const draftKind = S.modal.includes('phd') ? 'phd' : 'jobs';
+    localStorage.removeItem(`application_draft_${draftKind}_v1`);
+    // Re-render the modal — it'll come back empty
+    render();
+    toast('Draft discarded — fresh form');
+  });
 
   document.getElementById('restore-file-input')?.addEventListener('change',e=>{
     const file=e.target.files[0];
@@ -1356,6 +1511,8 @@ function attachModalEvents(){
     } else {
       item.id=Date.now()+Math.floor(Math.random()*1000);item.comments=[];
       if(isPhd) S.phd.unshift(item);else S.jobs.unshift(item);
+      // Clear the draft now that this entry has been saved
+      try{ localStorage.removeItem(`application_draft_${isPhd?'phd':'jobs'}_v1`); }catch(e){}
     }
     saveData();S.modal=null;S.editItem=null;render();
     toast(isEdit?'Changes saved':'Entry added');
