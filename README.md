@@ -14,22 +14,22 @@ No accounts. No backend. No tracking. Your data lives only in your browser.
 ## Why this exists
 
 Application seasons — whether for PhDs, postdocs, research roles, or industry jobs — turn into a few months of juggling many things at once: deadlines, professor emails, application portals, cover letter versions, interview rounds, recruiter follow-ups, offer responses. The information piles up fast.
-
+ 
 The usual options don't fit well:
-
+ 
 - **Spreadsheets** get messy after a dozen rows. Status columns become inconsistent, deadlines fall off your radar, and there's no good place to log "prof replied today, asked for research statement."
 - **Notion** is powerful but heavy. You spend more time tweaking the database than tracking applications.
 - **Job-tracker SaaS tools** charge a subscription and store your data on their servers.
 - **Sticky notes and inbox flags** stop working past 5 applications.
-
 Application Tracker is a single HTML file that runs in your browser. PhD applications and job applications each get their own page with workflows that actually match how those processes work — PhD tracking cares about professor contact, research fit, and lab pages; job tracking cares about application date, recruiter contact, and OA stages.
-
+ 
 It saves to your browser's `localStorage`, so your data never leaves your machine. Fork it, deploy it free on GitHub Pages, and you're done.
 
 ## Features
 
 - 📋 **Two trackers in one** — PhD applications and job applications, with status workflows tailored to each
 - 🧭 **Opportunities directory** — a curated tab of legitimate, hand-verified sources for PhD positions, fellowships, and industry research jobs (EURAXESS, FindAPhD, DeepMind, MSR, and more)
+- 🔖 **Personal saved links** — bookmark career pages, lab sites, or programmes you want to revisit. Private to your browser, included in JSON backups.
 - 🔖 **Quick Add Bookmarklet** — install a one-click bookmark; while browsing any lab page or job listing, click it to instantly open Application Tracker with the page's text pre-loaded for parsing
 - ⏰ **Deadline alerts** — banner alerts surface deadlines within 7 days (urgent) and 14 days (planning ahead)
 - 💾 **Smart backup reminders** — nudges you when your data hasn't been backed up in over a week
@@ -47,25 +47,24 @@ It saves to your browser's `localStorage`, so your data never leaves your machin
 ## Using Application Tracker across devices
 
 Application Tracker has **no backend** — your data lives in your browser's `localStorage`. To use it on multiple devices (laptop + phone, work + home), use the JSON backup/restore flow:
-
+ 
 1. On your primary device: open the menu (`⋮`) → **Download JSON backup** (or click "Download backup now" in the reminder banner)
 2. Save the file (e.g. `application_backup_2025-12-01.json`) somewhere accessible — Google Drive, Dropbox, iCloud, or just email it to yourself
 3. On the other device: open the same URL → menu → **Restore from backup** → pick the file → click **Restore data**
-
 That's it. No accounts, no signups. The reminder banner will nudge you to backup again after 7 days of changes, so you're unlikely to lose work.
-
+ 
 **Tip:** Make a habit of downloading a backup before any major work — clearing browser data, switching devices, or right before deadlines. Treat it like saving a Word document.
 
 ## Using Application Tracker
 
 The first time you open it, you'll see example data. Click **"Clear example data &amp; start fresh"** in the intro banner, or use the menu (top-right `⋮`) → "Clear all data."
-
+ 
 **Adding entries:** Click **Add PhD** or **Add Job**. Each form has a "Quick Paste" box at the top — paste raw text from a lab page or job listing, and emails/URLs/deadlines/prof names get extracted automatically.
-
+ 
 **Tracking progress:** Click any row to expand it — view full details, add timestamped log entries (interview feedback, prof replies, anything). Edit and delete with the icons on hover.
-
+ 
 **Filtering:** Use the search bar, status filter, and priority filter. Click any column header to sort.
-
+ 
 **Exporting:** Menu (`⋮`) → **Export as CSV** for spreadsheet use, or **Download JSON backup** for a complete portable copy. **Restore from backup** loads a previously downloaded JSON file.
 
 ## Deploy your own copy
