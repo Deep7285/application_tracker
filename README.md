@@ -1,6 +1,6 @@
 <div align="center">
 
-# Pipeline
+# Application Tracker
 
 **A clean, fast, open-source tracker for PhD and job applications.**
 
