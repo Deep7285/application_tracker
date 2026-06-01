@@ -30,6 +30,8 @@ It saves to your browser's `localStorage`, so your data never leaves your machin
 ## Features
 
 - 📋 **Two trackers in one** — PhD applications and job applications, with status workflows tailored to each
+- 🧭 **Opportunities directory** — a curated tab of legitimate, hand-verified sources for PhD positions, fellowships, and industry research jobs (EURAXESS, FindAPhD, DeepMind, MSR, and more)
+- 🔖 **Quick Add Bookmarklet** — install a one-click bookmark; while browsing any lab page or job listing, click it to instantly open Application Tracker with the page's text pre-loaded for parsing
 - ⏰ **Deadline alerts** — banner alerts surface deadlines within 7 days (urgent) and 14 days (planning ahead)
 - 💾 **Smart backup reminders** — nudges you when your data hasn't been backed up in over a week
 - 🔄 **Restore from JSON anywhere** — download a backup on one device, upload it on another. That's how you sync across phone/laptop without a backend.
