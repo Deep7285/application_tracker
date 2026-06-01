@@ -5,12 +5,31 @@
 **A clean, fast, open-source tracker for PhD and job applications.**
 
 No accounts. No backend. No tracking. Your data lives only in your browser.
-
-[**→ Live demo**](https://deep7285.github.io/application_tracker/) · [**→ Deploy your own in 3 minutes**](#-deploy-your-own-copy) · [**→ Screenshots**](#screenshots)
+[**→ Live demo**](https://deep7285.github.io/application_tracker/)
 
 </div>
 
 ---
+## Screenshots
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/56ab500a-f35e-4fc8-8bd9-b985ed68a78c" width="48%" alt="image" />
+  <img src="https://github.com/user-attachments/assets/612b2341-b9b4-41b0-b1ff-6ec7926fb358" width="48%" alt="image" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a273f464-d857-4c71-993c-c7993554a030" width="48%" alt="image" />
+  <img src="https://github.com/user-attachments/assets/e26662fc-d953-4204-8034-ebbd425a12c2" width="48%" alt="image" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/18865d19-79ca-4b4a-b4cf-271ffef1eb6f" width="48%" alt="image" />
+  <img src="https://github.com/user-attachments/assets/5e333dea-a26b-45f1-ba72-cb831c289bd2" width="48%" alt="image" />
+</p>
+
+</div>
+
+---
+
 
 ## Why this exists
 
