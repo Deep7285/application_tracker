@@ -233,6 +233,38 @@ tbody tr:last-child td{border-bottom:none}
 .draft-notice i{color:var(--purple);font-size:18px;flex-shrink:0}
 .draft-notice strong{color:var(--ink);font-weight:600}
 
+/* ── Tab intro descriptions ─────────────────────────────────────────── */
+.tab-intro{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:18px;display:flex;align-items:flex-start;gap:14px}
+.tab-intro-icon{width:36px;height:36px;border-radius:8px;background:var(--cream-2);color:var(--accent-2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tab-intro-body{flex:1;min-width:0}
+.tab-intro-title{font-family:var(--font-display);font-size:16px;font-weight:500;letter-spacing:-0.01em;margin-bottom:3px;line-height:1.25}
+.tab-intro-text{font-size:12.5px;color:var(--ink-2);line-height:1.55}
+.tab-intro-text strong{color:var(--ink);font-weight:600}
+.tab-intro-text code{font-family:var(--font-mono);font-size:11.5px;background:var(--cream-2);padding:1px 6px;border-radius:4px;border:1px solid var(--line)}
+
+/* ── Saved Links (Opportunities tab) ─────────────────────────────────────────── */
+.saved-links-section{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:18px}
+.saved-links-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.saved-links-title-block{display:flex;align-items:center;gap:11px}
+.saved-links-icon{width:32px;height:32px;border-radius:7px;background:var(--accent-2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.saved-links-title-block h3{font-family:var(--font-display);font-size:16px;font-weight:500;letter-spacing:-0.01em;line-height:1.2}
+.saved-links-title-block .sub{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.04em;margin-top:2px}
+.saved-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.saved-link-card{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;display:flex;flex-direction:column;gap:4px;position:relative;transition:all .12s}
+.saved-link-card:hover{border-color:var(--line-2);background:var(--paper)}
+.saved-link-card .sl-label{font-weight:600;font-size:13px;color:var(--ink);line-height:1.3;display:flex;align-items:center;gap:6px}
+.saved-link-card .sl-label a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.saved-link-card .sl-label a:hover{color:var(--accent-2)}
+.saved-link-card .sl-label a i{font-size:12px;opacity:0.6}
+.saved-link-card .sl-url{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-link-card .sl-note{font-size:11.5px;color:var(--ink-2);line-height:1.5;margin-top:3px}
+.saved-link-card .sl-cat-tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:8px;letter-spacing:0.02em;text-transform:uppercase;background:var(--blue-bg);color:var(--blue);margin-left:auto}
+.saved-link-actions{position:absolute;top:8px;right:8px;display:flex;gap:2px;opacity:0;transition:opacity .12s}
+.saved-link-card:hover .saved-link-actions{opacity:1}
+@media(hover:none){.saved-link-actions{opacity:1}}
+.saved-links-empty{padding:24px 20px;text-align:center;color:var(--ink-3);font-size:13px;background:var(--cream-2);border-radius:var(--r);border:1px dashed var(--line-2)}
+.saved-links-empty i{display:block;font-size:24px;opacity:0.4;margin-bottom:8px}
+
 /* ── Toast ─────────────────────────────────────────── */
 .toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:var(--r);font-size:13px;z-index:400;opacity:0;transform:translateY(10px);transition:all .2s;pointer-events:none;max-width:340px;box-shadow:0 8px 24px rgba(26,29,41,.15);display:flex;align-items:center;gap:8px}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -500,7 +532,9 @@ let S={
   tab:'phd',
   phd: loadData('application_phd_v1') || EXAMPLE_PHD.map(x=>({...x,comments:[...(x.comments||[])]})),
   jobs: loadData('application_jobs_v1') || EXAMPLE_JOBS.map(x=>({...x,comments:[...(x.comments||[])]})),
+  savedLinks: loadData('application_saved_links_v1') || [],
   modal:null, editItem:null,
+  editLink:null,
   expandedRow:null,
   sortKey:'',sortDir:1,
   filterStatus:'All',filterPriority:'All',filterSearch:'',
@@ -515,6 +549,7 @@ function saveData(){
   try{
     localStorage.setItem('application_phd_v1',JSON.stringify(S.phd));
     localStorage.setItem('application_jobs_v1',JSON.stringify(S.jobs));
+    localStorage.setItem('application_saved_links_v1',JSON.stringify(S.savedLinks));
   }catch(e){toast('Storage error — data may not be saved.')}
 }
 function saveDismissed(){localStorage.setItem('application_dismissed_alerts_v1',JSON.stringify(S.dismissedAlerts))}
@@ -656,6 +691,54 @@ function sortItems(items){
 }
 
 // ═══════════════ BUILD UI ─ Opportunities & Tools pages ═══════════════
+function buildSavedLinks(){
+  const links = S.savedLinks || [];
+
+  let body;
+  if(!links.length){
+    body = `
+      <div class="saved-links-empty">
+        <i class="ti ti-bookmark"></i>
+        <div>No saved links yet. Add URLs you want to revisit — career pages, lab websites, programme pages that aren't open yet.</div>
+      </div>`;
+  } else {
+    body = `<div class="saved-links-grid">${links.map(l => {
+      const safeUrl = esc(l.url);
+      const safeLabel = esc(l.label || l.url);
+      const note = l.note ? `<div class="sl-note">${esc(l.note)}</div>` : '';
+      const catTag = l.category ? `<span class="sl-cat-tag">${esc(l.category)}</span>` : '';
+      return `
+        <div class="saved-link-card">
+          <div class="sl-label">
+            <a href="${safeUrl}" target="_blank" rel="noopener">${safeLabel}<i class="ti ti-external-link"></i></a>
+            ${catTag}
+          </div>
+          <div class="sl-url">${safeUrl}</div>
+          ${note}
+          <div class="saved-link-actions">
+            <button class="icon-btn link-edit-btn" data-id="${l.id}" title="Edit"><i class="ti ti-edit"></i></button>
+            <button class="icon-btn link-del-btn" data-id="${l.id}" title="Delete"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+  }
+
+  return `
+    <div class="saved-links-section">
+      <div class="saved-links-header">
+        <div class="saved-links-title-block">
+          <div class="saved-links-icon"><i class="ti ti-bookmark"></i></div>
+          <div>
+            <h3>Your saved links</h3>
+            <div class="sub">${links.length} link${links.length===1?'':'s'} · private to this browser</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="add-link-btn"><i class="ti ti-plus"></i> Add link</button>
+      </div>
+      ${body}
+    </div>`;
+}
+
 function buildOpportunities(){
   const tagClass = (tag) => {
     const t = (tag||'').toLowerCase();
@@ -689,10 +772,18 @@ function buildOpportunities(){
   }).join('');
 
   return `
+    <div class="tab-intro">
+      <div class="tab-intro-icon"><i class="ti ti-compass"></i></div>
+      <div class="tab-intro-body">
+        <div class="tab-intro-title">Opportunities</div>
+        <div class="tab-intro-text">Two things here. <strong>Your saved links</strong> at the top — a personal bookmark list for career pages, lab sites, or programmes you want to revisit (private to your browser, included in JSON backups). Below that, a <strong>curated directory</strong> of legitimate sources for PhD positions, fellowships, and industry research roles — verified URLs you can browse and add to your tracker.</div>
+      </div>
+    </div>
+    ${buildSavedLinks()}
     <div class="opp-intro">
       <div class="eyebrow">Discover · Curated resources</div>
       <h2>Where to find opportunities</h2>
-      <p>This page is a hand-picked list of legitimate sources for PhD positions, research jobs, and industry roles. Click through, find something interesting, then come back to the PhD or Jobs tab and add it to your tracker. Use the Quick Paste feature in the Add form to fill fields fast.</p>
+      <p>Hand-picked sources below. Click through, find something interesting, then come back to the PhD or Jobs tab and add it to your tracker. Use Quick Paste in the Add form to fill fields fast.</p>
     </div>
     <div class="opp-grid">${categories}</div>
     <div class="opp-footer">
@@ -709,6 +800,13 @@ function buildTools(){
   const compactBookmarklet = bookmarkletJS.replace(/\s+/g,' ').replace(/; /g,';');
 
   return `
+    <div class="tab-intro">
+      <div class="tab-intro-icon"><i class="ti ti-tools"></i></div>
+      <div class="tab-intro-body">
+        <div class="tab-intro-title">Tools</div>
+        <div class="tab-intro-text">Browser shortcuts to speed up adding entries. Install the <strong>Quick Add Bookmarklet</strong> once — then on any PhD lab page or job listing, click it to instantly open Application Tracker with the page's text pre-loaded into the Add form. No copy-paste needed.</div>
+      </div>
+    </div>
     <div class="tools-section">
       <div class="tools-eyebrow">Browser tool · One-click add</div>
       <h2>Quick Add Bookmarklet</h2>
@@ -1005,6 +1103,7 @@ function buildDetailRow(item,isPhd){
 
 function buildModal(){
   if(S.modal==='restore') return buildRestoreModal();
+  if(S.modal==='add-link'||S.modal==='edit-link') return buildLinkModal();
   const isPhd=S.modal.includes('phd');
   const isEdit=S.modal.startsWith('edit');
 
@@ -1145,8 +1244,10 @@ function buildRestoreModal(){
 
   const currentPhd=S.phd.length;
   const currentJobs=S.jobs.length;
+  const currentLinks=S.savedLinks.length;
   const newPhd=hasParsed?rm.parsed.phd.length:0;
   const newJobs=hasParsed?rm.parsed.jobs.length:0;
+  const newLinks=hasParsed?(rm.parsed.savedLinks||[]).length:0;
   const exportedAt=hasParsed&&rm.parsed.exportedAt?new Date(rm.parsed.exportedAt).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'unknown';
 
   const fileSection = !hasFile ? `
@@ -1176,7 +1277,7 @@ function buildRestoreModal(){
       </div>
       <button class="icon-btn" id="restore-clear-file" title="Choose different file"><i class="ti ti-x"></i></button>
     </div>
-    <div class="restore-stats">
+    <div class="restore-stats" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">
       <div class="restore-stat">
         <div class="restore-stat-label">PhD applications</div>
         <div class="restore-stat-val">${newPhd}</div>
@@ -1187,8 +1288,13 @@ function buildRestoreModal(){
         <div class="restore-stat-val">${newJobs}</div>
         <div class="restore-stat-sub">currently: ${currentJobs}</div>
       </div>
+      <div class="restore-stat">
+        <div class="restore-stat-label">Saved links</div>
+        <div class="restore-stat-val">${newLinks}</div>
+        <div class="restore-stat-sub">currently: ${currentLinks}</div>
+      </div>
     </div>
-    ${(currentPhd+currentJobs>0)?`<div style="margin-top:14px;padding:10px 12px;background:var(--amber-bg);color:var(--amber);border-radius:var(--r);font-size:12px;display:flex;gap:8px;align-items:flex-start"><i class="ti ti-alert-triangle" style="margin-top:1px"></i><div><strong>Warning:</strong> Restoring will replace all current data on this device (${currentPhd+currentJobs} entries). Download a backup of your current data first if you want to keep it.</div></div>`:''}
+    ${(currentPhd+currentJobs+currentLinks>0)?`<div style="margin-top:14px;padding:10px 12px;background:var(--amber-bg);color:var(--amber);border-radius:var(--r);font-size:12px;display:flex;gap:8px;align-items:flex-start"><i class="ti ti-alert-triangle" style="margin-top:1px"></i><div><strong>Warning:</strong> Restoring will replace all current data on this device (${currentPhd+currentJobs+currentLinks} items including saved links). Download a backup of your current data first if you want to keep it.</div></div>`:''}
   `;
 
   return`<div class="modal-bg" id="modal-bg">
@@ -1214,6 +1320,39 @@ function buildRestoreModal(){
       <div class="modal-footer">
         <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
         <button class="btn btn-primary" id="restore-confirm-btn" ${hasParsed?'':'disabled style="opacity:0.5;cursor:not-allowed"'}>Restore data</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildLinkModal(){
+  const isEdit = S.modal === 'edit-link';
+  const d = isEdit && S.editLink ? S.editLink : {};
+  const v = (k) => esc(d[k] || '');
+
+  return `<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow">Personal bookmark</div>
+          <div class="modal-title">${isEdit ? 'Edit saved link' : 'Save a link'}</div>
+        </div>
+        <button class="icon-btn" id="modal-close" aria-label="Close"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="restore-info" style="background:var(--cream-2);border-color:var(--line-2);color:var(--ink-2)">
+          <i class="ti ti-info-circle" style="color:var(--accent-2)"></i>
+          <div>Save any URL you want to revisit later — like a career page that has no openings yet, a lab's website, or a programme page that hasn't opened applications. These are <strong>private to your browser</strong> and included in your JSON backups.</div>
+        </div>
+        <div class="form-group"><label>URL <span style="color:var(--accent-2)">*</span></label><input id="f-link-url" type="url" value="${v('url')}" placeholder="https://careers.example.com" autofocus></div>
+        <div class="form-group"><label>Label <span style="color:var(--accent-2)">*</span></label><input id="f-link-label" value="${v('label')}" placeholder="e.g. Microsoft Careers — Research Engineer"></div>
+        <div class="form-group"><label>Category</label><input id="f-link-category" value="${v('category')}" placeholder="e.g. Career Page, Lab Site, Programme — anything you like"></div>
+        <div class="form-group"><label>Note</label><textarea id="f-link-note" placeholder="Why you saved this — what to check, when openings typically appear, etc.">${v('note')}</textarea></div>
+      </div>
+      <div class="modal-footer">
+        ${isEdit ? `<button class="btn btn-danger btn-sm" id="del-link-modal-btn"><i class="ti ti-trash"></i> Delete</button>` : ''}
+        <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="link-save-btn">${isEdit ? 'Save changes' : 'Save link'}</button>
       </div>
     </div>
   </div>`;
@@ -1274,8 +1413,25 @@ function buildMainContent(){
   if(S.tab==='opportunities') return buildOpportunities();
   if(S.tab==='tools') return buildTools();
   // PhD or Jobs tab — show the data tracker
+  const isPhd = S.tab==='phd';
+  const tabIntro = isPhd
+    ? `<div class="tab-intro">
+         <div class="tab-intro-icon"><i class="ti ti-school"></i></div>
+         <div class="tab-intro-body">
+           <div class="tab-intro-title">PhD Applications</div>
+           <div class="tab-intro-text">Track universities, professors, and PhD programmes you're applying to. Click <strong>+ Add PhD</strong> to add an entry, or click any row to expand it and log activity (prof replies, interview notes, follow-ups). Status flow: <strong>Researching → Emailed Prof → Applied → Interview → Offer/Reject</strong>. Deadlines under 14 days will alert you at the top.</div>
+         </div>
+       </div>`
+    : `<div class="tab-intro">
+         <div class="tab-intro-icon"><i class="ti ti-briefcase"></i></div>
+         <div class="tab-intro-body">
+           <div class="tab-intro-title">Job Applications</div>
+           <div class="tab-intro-text">Track research jobs, industry roles, and any career applications. Click <strong>+ Add Job</strong> to add an entry, or click any row to expand it for details and activity log. Status flow: <strong>Saved → Applied → OA → Interview → Offer/Reject</strong>. Use the <code>Saved</code> status for opportunities you're considering but haven't applied to yet.</div>
+         </div>
+       </div>`;
   return `
     ${buildHero()}
+    ${tabIntro}
     ${buildAlerts()}
     ${buildStats()}
     ${buildToolbar()}
@@ -1318,6 +1474,25 @@ function attachEvents(){
   document.getElementById('search-inp')?.addEventListener('input',e=>{S.filterSearch=e.target.value;renderTable();});
   document.getElementById('status-flt')?.addEventListener('change',e=>{S.filterStatus=e.target.value;renderTable();});
   document.getElementById('priority-flt')?.addEventListener('change',e=>{S.filterPriority=e.target.value;renderTable();});
+
+  // Saved Links buttons (on Opportunities tab)
+  document.getElementById('add-link-btn')?.addEventListener('click',()=>{
+    S.editLink=null;S.modal='add-link';render();
+  });
+  document.querySelectorAll('.link-edit-btn').forEach(btn=>btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const id=+btn.dataset.id;
+    S.editLink=S.savedLinks.find(l=>l.id===id);
+    if(S.editLink){S.modal='edit-link';render();}
+  }));
+  document.querySelectorAll('.link-del-btn').forEach(btn=>btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(!confirm('Delete this saved link?')) return;
+    const id=+btn.dataset.id;
+    S.savedLinks=S.savedLinks.filter(l=>l.id!==id);
+    saveData();render();toast('Link deleted','ti-trash');
+  }));
+
   document.addEventListener('click',e=>{
     if(S.menuOpen&&!e.target.closest('.menu')){S.menuOpen=false;render();}
   },{once:S.menuOpen});
@@ -1357,7 +1532,9 @@ function attachTableEvents(){
 }
 
 function attachModalEvents(){
+  const isLinkModal = S.modal === 'add-link' || S.modal === 'edit-link';
   const isFormModal = S.modal && (S.modal.startsWith('add-') || S.modal.startsWith('edit-'));
+  const isEntryFormModal = isFormModal && !isLinkModal; // PhD/Job forms — auto-draft enabled
   const isRestoreModal = S.modal === 'restore';
 
   // ── Smart close: confirm if form has content ──
@@ -1380,9 +1557,14 @@ function attachModalEvents(){
   const close = (skipConfirm = false) => {
     if(isFormModal && !skipConfirm && formHasContent()){
       const isEdit = S.modal.startsWith('edit');
-      const msg = isEdit
-        ? 'You have unsaved changes. Discard them and close?'
-        : 'Close this form?\n\nYour draft is auto-saved — you can reopen "Add" later and continue from where you left off.';
+      let msg;
+      if(isLinkModal){
+        msg = isEdit ? 'You have unsaved changes. Discard them and close?' : 'Close without saving this link?';
+      } else {
+        msg = isEdit
+          ? 'You have unsaved changes. Discard them and close?'
+          : 'Close this form?\n\nYour draft is auto-saved — you can reopen "Add" later and continue from where you left off.';
+      }
       if(!confirm(msg)) return;
     }
     if(isRestoreModal){
@@ -1390,6 +1572,7 @@ function attachModalEvents(){
     }
     S.modal = null;
     S.editItem = null;
+    S.editLink = null;
     render();
   };
 
@@ -1415,8 +1598,8 @@ function attachModalEvents(){
     document.addEventListener('keydown', escHandler);
   }
 
-  // ── Auto-save draft on input ──
-  if(isFormModal){
+  // ── Auto-save draft on input (PhD/Job entry forms only) ──
+  if(isEntryFormModal){
     const draftKind = S.modal.includes('phd') ? 'phd' : 'jobs';
     const isEdit = S.modal.startsWith('edit');
     // Only auto-save drafts for ADD modals (editing existing entries shouldn't risk overwriting)
@@ -1517,6 +1700,43 @@ function attachModalEvents(){
     saveData();S.modal=null;S.editItem=null;render();
     toast(isEdit?'Changes saved':'Entry added');
   });
+
+  // ── Saved-link modal handlers ──
+  document.getElementById('link-save-btn')?.addEventListener('click',()=>{
+    const isEdit = S.modal === 'edit-link';
+    const g = id => (document.getElementById(id)?.value||'').trim();
+    const url = g('f-link-url');
+    const label = g('f-link-label');
+    if(!url){alert('URL is required.');return;}
+    if(!label){alert('Label is required.');return;}
+    // Validate URL minimally
+    let safeUrl = url;
+    if(!/^https?:\/\//i.test(safeUrl)) safeUrl = 'https://' + safeUrl;
+    const link = {
+      url: safeUrl,
+      label,
+      category: g('f-link-category'),
+      note: g('f-link-note'),
+    };
+    if(isEdit && S.editLink){
+      const idx = S.savedLinks.findIndex(l => l.id === S.editLink.id);
+      if(idx >= 0) S.savedLinks[idx] = {...S.savedLinks[idx], ...link};
+    } else {
+      link.id = Date.now() + Math.floor(Math.random()*1000);
+      link.createdAt = new Date().toISOString();
+      S.savedLinks.unshift(link);
+    }
+    saveData(); S.modal = null; S.editLink = null; render();
+    toast(isEdit ? 'Link updated' : 'Link saved');
+  });
+  document.getElementById('del-link-modal-btn')?.addEventListener('click',()=>{
+    if(!confirm('Delete this saved link?')) return;
+    const id = S.editLink?.id;
+    if(id == null) return;
+    S.savedLinks = S.savedLinks.filter(l => l.id !== id);
+    saveData(); S.modal = null; S.editLink = null; render();
+    toast('Link deleted','ti-trash');
+  });
 }
 
 function addComment(id){
@@ -1555,7 +1775,7 @@ function exportCSV(){
 }
 
 function backupJSON(){
-  const data={phd:S.phd,jobs:S.jobs,exportedAt:new Date().toISOString(),version:1};
+  const data={phd:S.phd,jobs:S.jobs,savedLinks:S.savedLinks,exportedAt:new Date().toISOString(),version:2};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1582,6 +1802,8 @@ function handleRestoreFileSelect(file){
       if(!data.phd||!data.jobs||!Array.isArray(data.phd)||!Array.isArray(data.jobs)){
         throw new Error('This file does not look like an Application Tracker backup. Expected fields: phd[], jobs[].');
       }
+      // savedLinks is optional (v1 backups won't have it) — default to empty
+      if(!data.savedLinks) data.savedLinks=[];
       S.restoreModal={file,parsed:data,error:null};
     }catch(err){
       S.restoreModal={file,parsed:null,error:err.message};
@@ -1599,15 +1821,17 @@ function confirmRestore(){
   const data=S.restoreModal?.parsed;
   if(!data) return;
   S.phd=data.phd;S.jobs=data.jobs;
+  S.savedLinks=data.savedLinks||[];
   saveData();
   S.modal=null;S.restoreModal=null;
   render();
-  toast(`Restored ${data.phd.length} PhD + ${data.jobs.length} job entries`);
+  const linksLabel=S.savedLinks.length?` + ${S.savedLinks.length} saved links`:'';
+  toast(`Restored ${data.phd.length} PhD + ${data.jobs.length} job entries${linksLabel}`);
 }
 
 function clearAll(){
   if(!confirm('Delete ALL your data permanently? Consider downloading a backup first. This cannot be undone.')) return;
-  S.phd=[];S.jobs=[];S.menuOpen=false;saveData();render();
+  S.phd=[];S.jobs=[];S.savedLinks=[];S.menuOpen=false;saveData();render();
   toast('All data cleared','ti-trash');
 }
 
