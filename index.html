@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Application Tracker — PhD &amp; Job Application Tracker</title>
 <meta name="description" content="A clean, fast, open-source tracker for PhD and job applications. No backend. No accounts. Your data stays in your browser.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1d29'/%3E%3Crect x='7' y='8' width='18' height='3.5' rx='1.5' fill='%23d97757'/%3E%3Crect x='7' y='14.25' width='14' height='3.5' rx='1.5' fill='%23fdfbf5' opacity='0.85'/%3E%3Crect x='7' y='20.5' width='10' height='3.5' rx='1.5' fill='%23fdfbf5' opacity='0.55'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -78,13 +79,10 @@ input:focus,select:focus,textarea:focus{outline:none}
   position:sticky;top:0;z-index:100;
   flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:10px;padding:18px 0;cursor:default}
-.brand-mark{
-  width:28px;height:28px;border-radius:6px;background:var(--ink);color:var(--paper);
-  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);
-  font-weight:600;font-size:16px;letter-spacing:-0.02em;
-}
-.brand-name{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:-0.01em;line-height:1}
+.brand{display:flex;align-items:center;gap:11px;padding:16px 0;cursor:default}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-logo svg{display:block}
+.brand-name{font-family:var(--font-display);font-weight:500;font-size:18px;letter-spacing:-0.015em;line-height:1.05;color:var(--ink)}
 .brand-tag{font-size:11px;color:var(--ink-3);margin-top:3px;font-weight:400;letter-spacing:0.02em}
 .tabs{display:flex;gap:0;align-items:stretch}
 .tab{padding:14px 18px;font-size:13px;color:var(--ink-3);border-bottom:2px solid transparent;font-weight:500;letter-spacing:-0.005em;transition:color .15s;display:flex;align-items:center;gap:6px}
@@ -276,9 +274,11 @@ tbody tr:last-child td{border-bottom:none}
 .restore-stat-sub{font-size:11px;color:var(--ink-3);margin-top:2px}
 
 /* ── Footer ─────────────────────────────────────────── */
-.foot{padding:32px 28px 24px;text-align:center;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line);margin-top:24px}
+.foot{padding:32px 28px 24px;text-align:center;color:var(--ink-3);font-size:12px;border-top:1px solid var(--line);margin-top:24px;line-height:1.7}
 .foot a{color:var(--ink-2);font-weight:500}
-.foot .foot-mark{font-family:var(--font-display);font-style:italic;color:var(--accent-2);margin:0 2px}
+.foot a:hover{color:var(--ink)}
+.foot .sep{color:var(--ink-4);margin:0 8px}
+.foot .copy{font-family:var(--font-mono);font-size:11px;color:var(--ink-4)}
 
 /* ── Settings menu ─────────────────────────────────────────── */
 .menu{position:relative}
@@ -309,7 +309,8 @@ tbody tr:last-child td{border-bottom:none}
 <div id="app"></div>
 <div class="toast" id="toast"></div>
 <footer class="foot">
-  Application Tracker — Your data lives only in this browser. <a href="https://github.com" target="_blank" id="gh-link">Fork on GitHub</a> <span class="foot-mark">·</span> Built for researchers
+  <div>A clean, open-source tracker for PhD &amp; job applications. Your data lives only in this browser. <a href="https://github.com/Deep7285/application_tracker" target="_blank">Fork on GitHub</a></div>
+  <div class="copy">© 2025 Deepak Kumar · MIT licensed · <a href="https://github.com/Deep7285" target="_blank">@Deep7285</a></div>
 </footer>
 
 <script>
@@ -325,6 +326,13 @@ const STATUS_CLS={
   'Interview':'s-Interview','Offer':'s-Offer','Rejected':'s-Rejected',
   'Waitlist':'s-Waitlist','Saved':'s-Saved','OA':'s-OA'
 };
+
+// Logo SVG (small stacked-bars mark suggesting an application pipeline)
+const BRAND_LOGO_SVG = `<svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="7" y="8" width="18" height="3.5" rx="1.5" fill="#d97757"/>
+  <rect x="7" y="14.25" width="14" height="3.5" rx="1.5" fill="#fdfbf5" opacity="0.85"/>
+  <rect x="7" y="20.5" width="10" height="3.5" rx="1.5" fill="#fdfbf5" opacity="0.55"/>
+</svg>`;
 
 // ═══════════════ EXAMPLE DATA (cleared on first user action) ═══════════════
 const EXAMPLE_PHD=[
@@ -350,7 +358,7 @@ let S={
   showIntro: !localStorage.getItem(HAS_SEEN_INTRO),
   menuOpen:false,
   dismissedAlerts: JSON.parse(localStorage.getItem('application_dismissed_alerts_v1')||'{}'),
-  restoreModal: null, // { file, parsed, error }
+  restoreModal: null,
 };
 
 function loadData(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null}catch(e){return null}}
@@ -365,7 +373,7 @@ function getLastBackup(){return localStorage.getItem('application_last_backup_v1
 function setLastBackup(){localStorage.setItem('application_last_backup_v1',new Date().toISOString())}
 function daysSinceBackup(){
   const last=getLastBackup();
-  if(!last) return null; // never backed up
+  if(!last) return null;
   return Math.floor((Date.now()-new Date(last).getTime())/(864e5));
 }
 
@@ -395,24 +403,16 @@ function toast(msg,icon='ti-check'){
 function quickPaste(rawText, isPhd){
   const text = (rawText||'').replace(/\s+/g,' ').trim();
   if(!text) return null;
-
   const out={};
-
-  // Email — most reliable
   const emailMatch=text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
   if(emailMatch) out.email=emailMatch[0];
-
-  // URL — first http(s):// url
   const urlMatch=text.match(/https?:\/\/[^\s<>"'\)]+/);
   if(urlMatch){
     let u=urlMatch[0].replace(/[.,;:!?]+$/,'');
     if(isPhd) out.labUrl=u; else out.link=u;
   }
-
-  // Dates: ISO (2025-12-15), DD/MM/YYYY, DD Month YYYY, Month DD, YYYY
   const months='January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec';
-  let dt=null;
-  let m;
+  let dt=null;let m;
   if((m=text.match(/\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b/))){
     dt=`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;
   } else if((m=text.match(new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(${months})\\s+(20\\d{2})\\b`,'i')))){
@@ -422,40 +422,29 @@ function quickPaste(rawText, isPhd){
     const monIdx=parseMonth(m[1]);
     if(monIdx) dt=`${m[3]}-${monIdx}-${m[2].padStart(2,'0')}`;
   } else if((m=text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](20\d{2})\b/))){
-    // Assume DD/MM/YYYY for non-US
     dt=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   }
   if(dt){
     if(isPhd) out.deadline=dt;
     else out.applied=dt;
   }
-
-  // Professor name — patterns like "Prof. First Last" or "Dr. First Last"
   if(isPhd){
     const profMatch=text.match(/\b(Prof|Professor|Dr|Doctor)\.?\s+([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){1,3})/);
     if(profMatch) out.prof=`${profMatch[1].replace(/\.$/,'')}. ${profMatch[2]}`.replace('Doctor.','Dr.').replace('Professor.','Prof.');
-
-    // University — look for known patterns
     const uniMatch=text.match(/\b([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){0,4})\s+(University|Institute of Technology|Institute|College)\b/);
     if(uniMatch) out.uni=`${uniMatch[1]} ${uniMatch[2]}`;
     else {
       const uniMatch2=text.match(/\b(University|Institute) of ([A-Z][a-zA-Z'\-]+(?:\s+[A-Z][a-zA-Z'\-]+){0,3})\b/);
       if(uniMatch2) out.uni=`${uniMatch2[1]} of ${uniMatch2[2]}`;
     }
-
-    // Department — look for "Department of X" or "School of X"
     const deptMatch=text.match(/\b(Department|School|Faculty|Institute) of ([A-Z][a-zA-Z& ,'\-]+?)(?:\.|,|;|$|\s+at\s)/);
     if(deptMatch) out.dept=`${deptMatch[1]} of ${deptMatch[2].trim()}`;
   } else {
-    // Company — heuristic: first word(s) that look like a company near "at" or capitalised pattern
     const compMatch=text.match(/\b(?:at|join|with)\s+([A-Z][a-zA-Z0-9&\.\- ]{2,30}?)(?:\s+(?:as|for|to|is|are|in|on|—|-)\s|[\.,;])/);
     if(compMatch) out.company=compMatch[1].trim();
-
-    // Role — common job titles
     const roleMatch=text.match(/\b(Research Scientist|Research Engineer|Data Scientist|ML Engineer|Machine Learning Engineer|Software Engineer|Postdoctoral Researcher|Postdoc|Research Associate|Senior Engineer|Junior Engineer|Principal Researcher|Research Intern|Software Developer|Applied Scientist|PhD Researcher)\b/i);
     if(roleMatch){
       out.role=roleMatch[1].split(' ').map(w=>w[0].toUpperCase()+w.slice(1).toLowerCase()).join(' ');
-      // Map to type if possible
       const r=roleMatch[1].toLowerCase();
       if(r.includes('research scientist')||r.includes('research engineer')||r.includes('applied scientist')||r.includes('research intern')) out.type='Research';
       else if(r.includes('data scientist')) out.type='Data Scientist';
@@ -463,11 +452,8 @@ function quickPaste(rawText, isPhd){
       else if(r.includes('postdoc')) out.type='Postdoc';
     }
   }
-
-  // Notes: first 200 chars cleaned
   const cleaned=text.slice(0,250).trim();
   if(cleaned.length>30) out.notes=cleaned + (text.length>250?'…':'');
-
   return out;
 }
 
@@ -525,7 +511,7 @@ function buildHero(){
   if(!S.showIntro) return '';
   return`<div class="hero show" id="hero">
     <button class="hero-close" id="hero-close" aria-label="Dismiss"><i class="ti ti-x"></i></button>
-    <div class="hero-eyebrow">application · open-source</div>
+    <div class="hero-eyebrow">Application Tracker · open-source</div>
     <h1>Track your applications<br>without the <em>spreadsheet chaos</em>.</h1>
     <p>A clean, fast tracker for PhD applications and research jobs. No accounts, no cloud, no tracking — your data lives only in this browser. Fork it on GitHub to deploy your own copy.</p>
     <div class="hero-actions">
@@ -538,10 +524,7 @@ function buildHero(){
 function buildAlerts(){
   const alerts=[];
   const now=Date.now();
-  const today=new Date();today.setHours(0,0,0,0);
 
-  // ── Deadline alerts ──
-  // Collect all upcoming PhD deadlines that are active (not rejected, applied, offer, withdrawn)
   const upcoming=S.phd.filter(x=>{
     if(!x.deadline) return false;
     if(['Rejected','Offer','Applied'].includes(x.status)) return false;
@@ -558,7 +541,6 @@ function buildAlerts(){
     return d>7 && d<=14;
   });
 
-  // Build deadline alert key for dismissal (based on the IDs in the alert)
   if(urgent.length){
     const chips=urgent.map(x=>{
       const d=Math.ceil((new Date(x.deadline)-now)/(864e5));
@@ -591,7 +573,6 @@ function buildAlerts(){
     </div>`);
   }
 
-  // ── Backup reminder ──
   const totalItems=S.phd.length + S.jobs.length;
   const last=getLastBackup();
   const dismissedKey='backup_'+(last?last.slice(0,10):'never');
@@ -601,7 +582,6 @@ function buildAlerts(){
     let showBackup=false;
     let title='', text='';
     if(days===null){
-      // Never backed up and has data
       if(totalItems>=3){
         showBackup=true;
         title='You haven\'t backed up your data yet';
@@ -773,9 +753,7 @@ function buildDetailRow(item,isPhd){
 }
 
 function buildModal(){
-  // Restore modal — handled separately from add/edit forms
   if(S.modal==='restore') return buildRestoreModal();
-
   const isPhd=S.modal.includes('phd');
   const isEdit=S.modal.startsWith('edit');
   const d=isEdit&&S.editItem?S.editItem:{};
@@ -921,7 +899,7 @@ function buildRestoreModal(){
         <div class="restore-info">
           <i class="ti ti-info-circle"></i>
           <div>
-            Upload your <strong>application backup file</strong> (typically named <code>application_backup_YYYY-MM-DD.json</code>). The contents will be parsed and used to update your application data on this device.
+            Upload the <strong>Application Tracker backup file</strong> (typically named <code>application_backup_YYYY-MM-DD.json</code>). The contents will be parsed and used to update your application data on this device.
             <br><br>
             This is how you move your data between devices: download a backup from one browser, then upload it here in any other browser to restore everything — same entries, statuses, log notes, deadlines.
           </div>
@@ -945,9 +923,9 @@ function render(){
     <header class="topbar">
       <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
         <div class="brand">
-          <div class="brand-mark">P</div>
+          <div class="brand-logo">${BRAND_LOGO_SVG}</div>
           <div>
-            <div class="brand-name">application</div>
+            <div class="brand-name">Application Tracker</div>
             <div class="brand-tag">PhD &amp; job applications</div>
           </div>
         </div>
@@ -1004,7 +982,6 @@ function attachEvents(){
   document.getElementById('clear-btn')?.addEventListener('click',clearAll);
   document.getElementById('intro-btn')?.addEventListener('click',()=>{S.showIntro=true;S.menuOpen=false;localStorage.removeItem(HAS_SEEN_INTRO);render();});
 
-  // Alert action buttons
   document.getElementById('alert-backup-btn')?.addEventListener('click',backupJSON);
   document.getElementById('alert-restore-btn')?.addEventListener('click',openRestoreModal);
   document.getElementById('alert-backup-dismiss')?.addEventListener('click',e=>{
@@ -1021,7 +998,6 @@ function attachEvents(){
   document.getElementById('search-inp')?.addEventListener('input',e=>{S.filterSearch=e.target.value;renderTable();});
   document.getElementById('status-flt')?.addEventListener('change',e=>{S.filterStatus=e.target.value;renderTable();});
   document.getElementById('priority-flt')?.addEventListener('change',e=>{S.filterPriority=e.target.value;renderTable();});
-  // Click-outside for menu
   document.addEventListener('click',e=>{
     if(S.menuOpen&&!e.target.closest('.menu')){S.menuOpen=false;render();}
   },{once:S.menuOpen});
@@ -1066,7 +1042,6 @@ function attachModalEvents(){
   document.getElementById('modal-close')?.addEventListener('click',close);
   document.getElementById('modal-cancel')?.addEventListener('click',close);
 
-  // Restore modal handlers
   document.getElementById('restore-file-input')?.addEventListener('change',e=>{
     const file=e.target.files[0];
     if(file) handleRestoreFileSelect(file);
@@ -1168,12 +1143,11 @@ function backupJSON(){
   a.href=URL.createObjectURL(blob);
   a.download=`application_backup_${new Date().toISOString().slice(0,10)}.json`;
   a.click();URL.revokeObjectURL(a.href);
-  setLastBackup(); // mark as backed up now
+  setLastBackup();
   toast('Backup downloaded — keep it safe!');
   S.menuOpen=false;render();
 }
 
-// Restore modal: user picks a file, sees a summary, then confirms
 function openRestoreModal(){
   S.menuOpen=false;
   S.modal='restore';
@@ -1188,7 +1162,7 @@ function handleRestoreFileSelect(file){
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.phd||!data.jobs||!Array.isArray(data.phd)||!Array.isArray(data.jobs)){
-        throw new Error('This file does not look like a application backup. Expected fields: phd[], jobs[].');
+        throw new Error('This file does not look like an Application Tracker backup. Expected fields: phd[], jobs[].');
       }
       S.restoreModal={file,parsed:data,error:null};
     }catch(err){
@@ -1219,11 +1193,9 @@ function clearAll(){
   toast('All data cleared','ti-trash');
 }
 
-// expose globals for inline handlers
 window.addComment=addComment;
 window.doSort=doSort;
 
-// init
 render();
 </script>
 </body>
