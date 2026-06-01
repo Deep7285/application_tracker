@@ -290,6 +290,70 @@ tbody tr:last-child td{border-bottom:none}
 .menu-item.danger:hover{background:var(--red-bg)}
 .menu-divider{height:1px;background:var(--line);margin:4px 0}
 
+/* ── Opportunities Page ─────────────────────────────────────────── */
+.opp-intro{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:20px}
+.opp-intro h2{font-family:var(--font-display);font-size:20px;font-weight:500;letter-spacing:-0.015em;margin-bottom:6px}
+.opp-intro p{font-size:13.5px;color:var(--ink-2);line-height:1.6;max-width:720px}
+.opp-intro .eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+
+.opp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.opp-category{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;display:flex;flex-direction:column}
+.opp-category-header{display:flex;align-items:center;gap:9px;margin-bottom:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.opp-category-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.opp-cat-phd{background:var(--blue-bg);color:var(--blue)}
+.opp-cat-job{background:var(--green-bg);color:var(--green)}
+.opp-cat-fund{background:var(--purple-bg);color:var(--purple)}
+.opp-cat-industry{background:var(--amber-bg);color:var(--amber)}
+.opp-cat-listings{background:var(--teal-bg);color:var(--teal)}
+.opp-cat-meta{background:var(--pink-bg);color:var(--pink)}
+.opp-category h3{font-family:var(--font-display);font-size:15.5px;font-weight:500;letter-spacing:-0.01em;color:var(--ink);line-height:1.2}
+.opp-category .opp-sub{font-size:11px;color:var(--ink-3);margin-top:2px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.04em}
+.opp-list{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:2px}
+.opp-list li{padding:8px 4px;border-bottom:1px solid var(--cream-2);display:flex;align-items:flex-start;gap:10px;line-height:1.45}
+.opp-list li:last-child{border-bottom:none}
+.opp-list a{color:var(--ink);font-weight:500;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.opp-list a:hover{color:var(--accent-2);text-decoration:none}
+.opp-list a i{font-size:12px;color:var(--ink-3);opacity:0;transition:opacity .12s}
+.opp-list a:hover i{opacity:1;color:var(--accent-2)}
+.opp-list .opp-desc{font-size:11.5px;color:var(--ink-3);margin-top:1px;line-height:1.5}
+.opp-list .opp-tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;font-weight:600;padding:1px 6px;border-radius:8px;letter-spacing:0.02em;text-transform:uppercase;margin-left:4px;background:var(--cream-2);color:var(--ink-3);vertical-align:middle}
+.opp-list .opp-tag-eu{background:var(--blue-bg);color:var(--blue)}
+.opp-list .opp-tag-us{background:var(--red-bg);color:var(--red)}
+.opp-list .opp-tag-global{background:var(--gray-bg);color:var(--gray)}
+.opp-list .opp-tag-funded{background:var(--green-bg);color:var(--green)}
+.opp-bullet{width:5px;height:5px;border-radius:50%;background:var(--accent-2);margin-top:7px;flex-shrink:0;opacity:0.5}
+.opp-cta{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.opp-cta-text{font-size:11.5px;color:var(--ink-3);line-height:1.55}
+
+.opp-footer{margin-top:24px;padding:18px 22px;background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r-lg);font-size:12.5px;color:var(--ink-2);line-height:1.65}
+.opp-footer strong{color:var(--ink);font-weight:600}
+.opp-footer a{color:var(--blue);font-weight:500}
+
+/* ── Tools Page (Bookmarklet) ─────────────────────────────────────────── */
+.tools-section{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:18px}
+.tools-section h2{font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:-0.02em;margin-bottom:6px;line-height:1.2}
+.tools-eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--accent-2);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+.tools-section .lead{font-size:14px;color:var(--ink-2);line-height:1.6;max-width:680px;margin-bottom:18px}
+
+.bookmark-card{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 22px;margin:18px 0;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.bookmark-card-body{flex:1;min-width:200px}
+.bookmark-card-title{font-family:var(--font-display);font-size:15px;font-weight:500;margin-bottom:4px}
+.bookmark-card-desc{font-size:12.5px;color:var(--ink-3);line-height:1.55}
+.bookmark-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--accent-2);color:#fff;border-radius:var(--r);font-size:13.5px;font-weight:600;text-decoration:none;letter-spacing:-0.005em;cursor:grab;transition:all .12s;border:none;font-family:var(--font-body)}
+.bookmark-btn:hover{filter:brightness(1.08);text-decoration:none;color:#fff}
+.bookmark-btn:active{cursor:grabbing}
+.bookmark-btn i{font-size:16px}
+
+.steps-list{counter-reset:step;list-style:none;padding:0;margin:18px 0}
+.steps-list li{counter-increment:step;position:relative;padding:14px 16px 14px 56px;background:var(--cream-2);border-radius:var(--r);margin-bottom:10px;font-size:13.5px;line-height:1.6;color:var(--ink-2)}
+.steps-list li::before{content:counter(step);position:absolute;left:16px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--accent-2);color:#fff;font-family:var(--font-display);font-weight:600;display:flex;align-items:center;justify-content:center;font-size:14px}
+.steps-list strong{color:var(--ink);font-weight:600}
+.steps-list code{font-family:var(--font-mono);background:var(--paper);padding:2px 7px;border-radius:4px;font-size:12px;color:var(--ink);border:1px solid var(--line)}
+
+.tools-note{background:var(--blue-bg);border:1px solid var(--blue);border-radius:var(--r);padding:13px 16px;display:flex;gap:11px;align-items:flex-start;font-size:12.5px;line-height:1.6;color:var(--ink-2);margin-top:16px}
+.tools-note i{color:var(--blue);font-size:18px;flex-shrink:0;margin-top:1px}
+.tools-note strong{color:var(--ink)}
+
 /* ── Responsive ─────────────────────────────────────────── */
 @media(max-width:760px){
   .col-hide{display:none}
@@ -302,6 +366,9 @@ tbody tr:last-child td{border-bottom:none}
   .hero{padding:24px 20px}
   .hero h1{font-size:22px}
   .detail-row td{padding:16px}
+  .opp-grid{grid-template-columns:1fr}
+  .tools-section{padding:18px}
+  .steps-list li{padding:12px 14px 12px 50px}
 }
 </style>
 </head>
@@ -343,6 +410,83 @@ const EXAMPLE_PHD=[
 const EXAMPLE_JOBS=[
   {id:1,company:'Example Research Lab',role:'Research Scientist',type:'Research',applied:'',status:'Saved',contact:'',link:'',notes:'Example entry — click the menu to clear all and add your own.',comments:[]},
   {id:2,company:'Sample Tech Co.',role:'Data Scientist',type:'Data Scientist',applied:'',status:'Saved',contact:'',link:'',notes:'',comments:[]},
+];
+
+// ═══════════════ OPPORTUNITIES — CURATED RESOURCES ═══════════════
+// Hand-picked job boards & databases. Verified URLs. Update when needed.
+const OPPORTUNITIES = [
+  {
+    cat:'phd', icon:'ti-school', title:'PhD position databases',
+    subtitle:'Search & discover PhD openings',
+    items:[
+      {name:'EURAXESS', url:'https://euraxess.ec.europa.eu/jobs', desc:'EU\'s researcher portal — thousands of EU-funded PhD vacancies updated daily', tag:'EU'},
+      {name:'FindAPhD', url:'https://www.findaphd.com/', desc:'Largest PhD database for UK & worldwide listings, filterable by topic', tag:'Global'},
+      {name:'PhDportal', url:'https://www.phdportal.com/', desc:'European PhD programmes with detailed filters (country, funding, language)', tag:'EU'},
+      {name:'Academic Positions', url:'https://academicpositions.com/', desc:'European-focused PhD & postdoc roles across all disciplines', tag:'EU'},
+      {name:'ScholarshipPortal', url:'https://www.scholarshipportal.com/', desc:'PhD scholarships and fellowships worldwide', tag:'Global'},
+      {name:'jobs.ac.uk', url:'https://www.jobs.ac.uk/', desc:'UK-focused academic job board including PhD studentships', tag:'UK'},
+    ]
+  },
+  {
+    cat:'fund', icon:'ti-coins', title:'Funded fellowships & networks',
+    subtitle:'Stipend-based programmes',
+    items:[
+      {name:'Marie Skłodowska-Curie Actions', url:'https://marie-sklodowska-curie-actions.ec.europa.eu/jobs', desc:'EU\'s flagship PhD/postdoc fellowship programme — fully funded', tag:'Funded'},
+      {name:'DAAD (Germany)', url:'https://www.daad.de/en/study-and-research-in-germany/phd-studies-research/', desc:'German Academic Exchange Service — PhD funding for internationals', tag:'Germany'},
+      {name:'Max Planck Schools', url:'https://www.maxplanckschools.de/en', desc:'PhD programmes across Max Planck institutes — fully funded', tag:'Germany'},
+      {name:'EPFL Doctoral School', url:'https://www.epfl.ch/education/phd/', desc:'Swiss PhD positions with strong stipend funding', tag:'Switzerland'},
+      {name:'ETH Zürich Doctorate', url:'https://ethz.ch/en/doctorate.html', desc:'PhD opportunities at ETH — typically employee contracts', tag:'Switzerland'},
+      {name:'Vitae Researcher Careers', url:'https://www.vitae.ac.uk/', desc:'UK researcher development resources & funding leads', tag:'UK'},
+    ]
+  },
+  {
+    cat:'job', icon:'ti-briefcase', title:'Industry research roles',
+    subtitle:'AI4Science & R&D positions',
+    items:[
+      {name:'Google DeepMind Careers', url:'https://deepmind.google/careers/', desc:'AI research scientist & engineer roles — incl. AI for Materials team', tag:'Global'},
+      {name:'Microsoft Research', url:'https://www.microsoft.com/en-us/research/careers/open-positions/', desc:'Research positions across MSR labs, incl. AI4Science', tag:'Global'},
+      {name:'Anthropic Careers', url:'https://www.anthropic.com/careers', desc:'Research, ML engineering, and product roles', tag:'US/UK'},
+      {name:'Meta AI Research', url:'https://ai.meta.com/careers/', desc:'FAIR (Fundamental AI Research) positions worldwide', tag:'Global'},
+      {name:'IBM Research', url:'https://research.ibm.com/careers', desc:'Research roles across materials, AI, quantum', tag:'Global'},
+      {name:'Schmidt Sciences Fellowships', url:'https://www.schmidtsciencefellows.org/', desc:'Postdoc fellowships at the intersection of science & AI', tag:'Funded'},
+    ]
+  },
+  {
+    cat:'industry', icon:'ti-building-factory', title:'Materials & manufacturing R&D',
+    subtitle:'Industry labs working on materials',
+    items:[
+      {name:'Citrine Informatics', url:'https://citrine.io/careers/', desc:'AI for materials discovery — commercial platform', tag:'US'},
+      {name:'Materials Project', url:'https://next-gen.materialsproject.org/', desc:'Berkeley Lab\'s materials database — often hiring computational researchers', tag:'US'},
+      {name:'Tata Steel R&D', url:'https://www.tatasteel.com/careers/', desc:'Steel & advanced materials research roles', tag:'India/EU'},
+      {name:'BASF Research', url:'https://www.basf.com/global/en/careers.html', desc:'Chemicals/materials R&D positions worldwide', tag:'Global'},
+      {name:'Toyota Research Institute', url:'https://www.tri.global/careers', desc:'Materials AI & autonomous lab research roles', tag:'US'},
+      {name:'Bosch Research', url:'https://www.bosch.com/careers/', desc:'Industrial AI & materials research positions', tag:'Germany'},
+    ]
+  },
+  {
+    cat:'listings', icon:'ti-list-search', title:'General job boards',
+    subtitle:'Wider role discovery',
+    items:[
+      {name:'LinkedIn Jobs', url:'https://www.linkedin.com/jobs/', desc:'Largest professional network — best for industry roles & alerts', tag:'Global'},
+      {name:'Nature Careers', url:'https://www.nature.com/naturecareers/', desc:'Scientific jobs across academia & industry', tag:'Global'},
+      {name:'Science Careers (AAAS)', url:'https://jobs.sciencecareers.org/', desc:'Job board from Science magazine — research-focused', tag:'Global'},
+      {name:'Times Higher Education Jobs', url:'https://www.timeshighereducation.com/unijobs/', desc:'Academic jobs worldwide, strong UK coverage', tag:'Global'},
+      {name:'ResearchGate Jobs', url:'https://www.researchgate.net/jobs/', desc:'Browse jobs from researchers in your network', tag:'Global'},
+      {name:'Wellfound (AngelList)', url:'https://wellfound.com/jobs', desc:'Startup roles incl. AI/ML research at smaller companies', tag:'Global'},
+    ]
+  },
+  {
+    cat:'meta', icon:'ti-bulb', title:'Tips & background research',
+    subtitle:'Prepare your applications',
+    items:[
+      {name:'Google Scholar', url:'https://scholar.google.com/', desc:'Find a professor\'s recent papers before emailing them', tag:'Global'},
+      {name:'OpenReview', url:'https://openreview.net/', desc:'See ML/AI conference reviews to gauge a group\'s research', tag:'Global'},
+      {name:'r/PhD', url:'https://www.reddit.com/r/PhD/', desc:'Honest discussions about PhD programmes, funding, advisors', tag:'Global'},
+      {name:'The Professor Is In', url:'https://theprofessorisin.com/', desc:'Practical advice on applications, SOPs, & academic careers', tag:'Global'},
+      {name:'Cheeky Scientist', url:'https://cheekyscientist.com/', desc:'Industry transition guidance for PhDs', tag:'Global'},
+      {name:'Connected Papers', url:'https://www.connectedpapers.com/', desc:'Visualise a paper\'s citation network — great for finding adjacent labs', tag:'Global'},
+    ]
+  },
 ];
 
 // ═══════════════ STATE ═══════════════
@@ -506,7 +650,109 @@ function sortItems(items){
   });
 }
 
-// ═══════════════ BUILD UI ═══════════════
+// ═══════════════ BUILD UI ─ Opportunities & Tools pages ═══════════════
+function buildOpportunities(){
+  const tagClass = (tag) => {
+    const t = (tag||'').toLowerCase();
+    if(t==='eu'||t==='germany'||t==='switzerland'||t==='uk') return 'opp-tag-eu';
+    if(t==='us'||t==='us/uk') return 'opp-tag-us';
+    if(t==='funded') return 'opp-tag-funded';
+    return 'opp-tag-global';
+  };
+
+  const categories = OPPORTUNITIES.map(cat => {
+    const items = cat.items.map(it => `
+      <li>
+        <span class="opp-bullet"></span>
+        <div style="flex:1;min-width:0">
+          <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.name)} <i class="ti ti-external-link"></i><span class="opp-tag ${tagClass(it.tag)}">${esc(it.tag)}</span></a>
+          <div class="opp-desc">${esc(it.desc)}</div>
+        </div>
+      </li>`).join('');
+
+    return `
+      <div class="opp-category">
+        <div class="opp-category-header">
+          <div class="opp-category-icon opp-cat-${cat.cat}"><i class="ti ${cat.icon}"></i></div>
+          <div>
+            <h3>${esc(cat.title)}</h3>
+            <div class="opp-sub">${esc(cat.subtitle)}</div>
+          </div>
+        </div>
+        <ul class="opp-list">${items}</ul>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="opp-intro">
+      <div class="eyebrow">Discover · Curated resources</div>
+      <h2>Where to find opportunities</h2>
+      <p>This page is a hand-picked list of legitimate sources for PhD positions, research jobs, and industry roles. Click through, find something interesting, then come back to the PhD or Jobs tab and add it to your tracker. Use the Quick Paste feature in the Add form to fill fields fast.</p>
+    </div>
+    <div class="opp-grid">${categories}</div>
+    <div class="opp-footer">
+      <strong>This is intentionally not auto-updated.</strong> These job boards already do discovery far better than any algorithm could — they have filters, alerts, RSS feeds. Set up email alerts on a few that match your interests (EURAXESS and FindAPhD let you create alerts for specific keywords). Your job here isn't to replace those tools — it's to track what you've already started applying to. <br><br>
+      <strong>Missing a great resource?</strong> Edit <code style="font-family:var(--font-mono);font-size:11.5px;background:var(--paper);padding:1px 6px;border-radius:4px;border:1px solid var(--line)">OPPORTUNITIES</code> in <code style="font-family:var(--font-mono);font-size:11.5px;background:var(--paper);padding:1px 6px;border-radius:4px;border:1px solid var(--line)">index.html</code> to add your own.
+    </div>`;
+}
+
+function buildTools(){
+  // Bookmarklet code: opens current tracker URL with #quickadd=<base64 encoded page text>
+  // Detects whether the page looks more like a PhD listing or job listing for default tab.
+  const trackerUrl = window.location.origin + window.location.pathname;
+  const bookmarkletJS = `javascript:(function(){var t=(document.body.innerText||'').slice(0,5000);var u=document.title||'';var pg=t+'\\n\\n'+document.location.href;var pgL=pg.toLowerCase();var isP=(pgL.indexOf('phd')>-1||pgL.indexOf('doctoral')>-1||pgL.indexOf('professor')>-1||pgL.indexOf('research group')>-1||pgL.indexOf('faculty')>-1);var dat={t:pg,k:isP?'phd':'jobs',u:document.location.href,n:u};var enc=btoa(unescape(encodeURIComponent(JSON.stringify(dat))));window.open('${trackerUrl}#qa='+enc,'_blank');})();`;
+  const compactBookmarklet = bookmarkletJS.replace(/\s+/g,' ').replace(/; /g,';');
+
+  return `
+    <div class="tools-section">
+      <div class="tools-eyebrow">Browser tool · One-click add</div>
+      <h2>Quick Add Bookmarklet</h2>
+      <p class="lead">Click this bookmarklet from any PhD programme page, lab website, or job listing — it grabs the page text, opens Application Tracker, and pre-fills the Add form for you. Saves the copy-paste step entirely.</p>
+
+      <div class="bookmark-card">
+        <div class="bookmark-card-body">
+          <div class="bookmark-card-title">Drag this button to your bookmarks bar →</div>
+          <div class="bookmark-card-desc">It becomes a one-click "Add to Tracker" button on any webpage.</div>
+        </div>
+        <a class="bookmark-btn" id="bookmarklet-link" href="${esc(compactBookmarklet)}" draggable="true" onclick="event.preventDefault();alert('Drag this button to your browser\\'s bookmarks bar instead of clicking it. Then click the bookmark while on any PhD or job page.')"><i class="ti ti-bookmark-plus"></i>Add to Tracker</a>
+      </div>
+
+      <h3 style="font-family:var(--font-display);font-size:16px;font-weight:500;margin-top:24px;margin-bottom:12px;letter-spacing:-0.015em">How to install</h3>
+      <ol class="steps-list">
+        <li><strong>Show your bookmarks bar</strong> if it's hidden. On Chrome/Edge: press <code>Ctrl+Shift+B</code> (Windows) or <code>Cmd+Shift+B</code> (Mac). On Firefox: View → Toolbars → Bookmarks Toolbar. On Safari: View → Show Favorites Bar.</li>
+        <li><strong>Drag the orange "Add to Tracker" button</strong> above directly onto your bookmarks bar. It'll appear as a bookmark.</li>
+        <li><strong>Visit any PhD lab page, programme listing, or job description</strong> in your browser.</li>
+        <li><strong>Click the "Add to Tracker" bookmark.</strong> Application Tracker opens in a new tab with the page's text already loaded into the Quick Paste field.</li>
+        <li><strong>Click "Extract fields"</strong> in the form. Review what was auto-detected, add anything missing, hit Save.</li>
+      </ol>
+
+      <div class="tools-note">
+        <i class="ti ti-info-circle"></i>
+        <div>
+          <strong>How it works (and why it's safe):</strong> The bookmarklet only runs when you click it. It reads the visible text on the current page (nothing private — just what you can see), then opens Application Tracker with that text passed via the URL. Nothing is uploaded anywhere — the text goes directly from your browser to your Application Tracker tab. No tracking, no API calls.
+        </div>
+      </div>
+
+      <div class="tools-note" style="background:var(--amber-bg);border-color:var(--amber)">
+        <i class="ti ti-alert-triangle" style="color:var(--amber)"></i>
+        <div>
+          <strong>Browser limitation:</strong> Some browsers (Safari especially) restrict <code>javascript:</code> bookmarklets for security. If it doesn't work in your browser, just copy any page text manually into the Quick Paste field — same end result, one extra step.
+        </div>
+      </div>
+    </div>
+
+    <div class="tools-section">
+      <div class="tools-eyebrow">Browser tool · Mobile alternative</div>
+      <h2>On mobile?</h2>
+      <p class="lead">Bookmarklets don't work well on phones. Instead, when you find an interesting opportunity on your phone:</p>
+      <ol class="steps-list">
+        <li><strong>Copy the page text</strong> — long-press, select all, copy.</li>
+        <li><strong>Open Application Tracker</strong> in your mobile browser.</li>
+        <li><strong>Tap "Add PhD" or "Add Job"</strong> and paste into the Quick Paste field. Tap "Extract fields" to auto-populate.</li>
+      </ol>
+    </div>`;
+}
+
 function buildHero(){
   if(!S.showIntro) return '';
   return`<div class="hero show" id="hero">
@@ -936,10 +1182,16 @@ function render(){
           <button class="tab${S.tab==='jobs'?' active':''}" data-tab="jobs">
             <i class="ti ti-briefcase"></i>Jobs <span class="tab-count">${S.jobs.length}</span>
           </button>
+          <button class="tab${S.tab==='opportunities'?' active':''}" data-tab="opportunities">
+            <i class="ti ti-compass"></i>Opportunities
+          </button>
+          <button class="tab${S.tab==='tools'?' active':''}" data-tab="tools">
+            <i class="ti ti-tools"></i>Tools
+          </button>
         </nav>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-primary btn-sm" id="add-btn"><i class="ti ti-plus"></i> Add ${isPhd?'PhD':'Job'}</button>
+        ${(S.tab==='phd'||S.tab==='jobs')?`<button class="btn btn-primary btn-sm" id="add-btn"><i class="ti ti-plus"></i> Add ${isPhd?'PhD':'Job'}</button>`:''}
         <div class="menu">
           <button class="btn btn-ghost btn-sm" id="menu-btn" aria-label="Menu"><i class="ti ti-dots-vertical"></i></button>
           <div class="menu-pop${S.menuOpen?' show':''}" id="menu-pop">
@@ -954,13 +1206,22 @@ function render(){
       </div>
     </header>
     <main class="content">
-      ${buildHero()}
-      ${buildAlerts()}
-      ${buildStats()}
-      ${buildToolbar()}
-      <div id="table-area">${buildTable()}</div>
+      ${buildMainContent()}
     </main>`;
   attachEvents();
+}
+
+function buildMainContent(){
+  if(S.tab==='opportunities') return buildOpportunities();
+  if(S.tab==='tools') return buildTools();
+  // PhD or Jobs tab — show the data tracker
+  return `
+    ${buildHero()}
+    ${buildAlerts()}
+    ${buildStats()}
+    ${buildToolbar()}
+    <div id="table-area">${buildTable()}</div>
+  `;
 }
 
 function renderTable(){
@@ -1196,7 +1457,38 @@ function clearAll(){
 window.addComment=addComment;
 window.doSort=doSort;
 
-render();
+// ═══════════════ BOOKMARKLET INCOMING DATA HANDLER ═══════════════
+// If page loaded with #qa=<base64> hash from the bookmarklet, open Add form pre-filled
+function handleBookmarkletData(){
+  const hash=window.location.hash||'';
+  if(!hash.startsWith('#qa=')) return false;
+  try{
+    const enc=hash.slice(4);
+    const decoded=decodeURIComponent(escape(atob(enc)));
+    const dat=JSON.parse(decoded);
+    // Clear hash so refresh doesn't re-open
+    history.replaceState(null,'',window.location.pathname+window.location.search);
+    // Pick the right tab based on bookmarklet's guess
+    S.tab=(dat.k==='phd')?'phd':'jobs';
+    S.modal='add-'+(dat.k==='phd'?'phd':'jobs');
+    S.editItem=null;
+    render();
+    // Pre-fill the Quick Paste textarea with the page text
+    setTimeout(()=>{
+      const qp=document.getElementById('qp-text');
+      if(qp){
+        qp.value=(dat.t||'')+(dat.u?'\n\nSource: '+dat.u:'');
+        toast('Page text loaded — click "Extract fields" below','ti-clipboard-check');
+      }
+    },100);
+    return true;
+  }catch(e){
+    console.warn('Bookmarklet data parse error:',e);
+    return false;
+  }
+}
+
+if(!handleBookmarkletData()) render();
 </script>
 </body>
 </html>
