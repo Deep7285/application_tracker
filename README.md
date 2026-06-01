@@ -10,7 +10,7 @@ No accounts. No backend. No tracking. Your data lives only in your browser.
 </div>
 
 ---
-## Screenshots
+## Steps to follow for website deployment (mentioned in the screenshots)
 <p align="center">
   <img src="https://github.com/user-attachments/assets/56ab500a-f35e-4fc8-8bd9-b985ed68a78c" width="48%" alt="image" />
   <img src="https://github.com/user-attachments/assets/612b2341-b9b4-41b0-b1ff-6ec7926fb358" width="48%" alt="image" />
