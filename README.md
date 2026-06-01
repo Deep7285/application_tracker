@@ -16,18 +16,19 @@ No accounts. No backend. No tracking. Your data lives only in your browser.
 
 PhD application season is a few months of juggling 15+ universities, deadlines, professor emails, and follow-ups. Job searches look similar. Spreadsheets get messy fast. Notion is overkill. Most trackers are SaaS subscriptions you don't need.
 
-Pipeline is a single HTML file that runs in your browser. It saves to `localStorage`, so your data never leaves your machine. Fork it, deploy it free on GitHub Pages, and you're done.
+application tracker is a single HTML file that runs in your browser. It saves to `localStorage`, so your data never leaves your machine. Fork it, deploy it free on GitHub Pages, and you're done.
 
 ## Features
 
 - 📋 **Two trackers in one** — PhD applications and job applications, with status workflows tailored to each
-- ⏰ **Deadline countdowns** — "12d left" badges with colour-coded urgency
+- ⏰ **Deadline alerts** — banner alerts surface deadlines within 7 days (urgent) and 14 days (planning ahead)
+- 💾 **Smart backup reminders** — nudges you when your data hasn't been backed up in over a week
+- 🔄 **Restore from JSON anywhere** — download a backup on one device, upload it on another. That's how you sync across phone/laptop without a backend.
 - 🏷️ **Status tracking** — Researching → Emailed Prof → Applied → Interview → Offer/Reject
 - 🎯 **Priority &amp; fit scores** — focus on the high-value targets
 - 📝 **Activity log per entry** — timestamped notes for follow-ups, replies, interviews
 - 📋 **Quick Paste** — paste any text (lab page, job listing) and emails, URLs, dates, professor names get auto-extracted via regex. No API, no cost.
 - 📤 **CSV export** — clean spreadsheet output any time you need it
-- 💾 **JSON backup &amp; restore** — full data portability
 - 🔍 **Search, filter, sort** across every field
 - 📱 **Mobile-friendly** — check deadlines on your phone
 - 🌓 **Light + dark mode** — auto-follows system preference
@@ -42,7 +43,7 @@ The whole thing is one HTML file. Three options:
 1. Click **Fork** at the top right of this repo
 2. In your fork, go to **Settings → Pages**
 3. Under "Source", select **Deploy from a branch → main → / (root)** → Save
-4. Wait ~30 seconds. Your tracker is live at `https://YOUR-USERNAME.github.io/pipeline/`
+4. Wait ~30 seconds. Your tracker is live at `https://YOUR-USERNAME.github.io/application_tracker/`
 
 ### Option 2 · Local only
 
@@ -52,7 +53,19 @@ Download `index.html` and double-click it. Done. Bookmark `file:///...` in your 
 
 Upload `index.html` to Netlify, Vercel, Cloudflare Pages, or any static host. Drag-and-drop works.
 
-## Using Pipeline
+## Using application tracker across devices
+
+application tracker has **no backend** — your data lives in your browser's `localStorage`. To use it on multiple devices (laptop + phone, work + home), use the JSON backup/restore flow:
+
+1. On your primary device: open the menu (`⋮`) → **Download JSON backup** (or click "Download backup now" in the reminder banner)
+2. Save the file (e.g. `application_backup_2025-12-01.json`) somewhere accessible — Google Drive, Dropbox, iCloud, or just email it to yourself
+3. On the other device: open the same URL → menu → **Restore from backup** → pick the file → click **Restore data**
+
+That's it. No accounts, no signups. The reminder banner will nudge you to backup again after 7 days of changes, so you're unlikely to lose work.
+
+**Tip:** Make a habit of downloading a backup before any major work — clearing browser data, switching devices, or right before deadlines. Treat it like saving a Word document.
+
+## Using the application tracker
 
 The first time you open it, you'll see example data. Click **"Clear example data &amp; start fresh"** in the intro banner, or use the menu (top-right `⋮`) → "Clear all data."
 
@@ -85,7 +98,7 @@ Open `index.html` in a text editor. Common changes:
 - **Add a status type:** Find `PHD_STATUSES` or `JOB_STATUSES` arrays near the top of the `<script>` block. Add your value. Then add a matching CSS class like `.s-YourStatus { background: ...; color: ...; }`.
 - **Add a field:** Add it to the form in `buildModal()`, the detail panel in `buildDetailRow()`, and the row in `buildTable()`.
 - **Re-theme:** All colours are CSS variables at the top of `<style>`. Light + dark mode tokens are paired.
-- **Rename:** Change "Pipeline" in the `<title>`, `.brand-name`, and footer.
+- **Rename:** Change "application" in the `<title>`, `.brand-name`, and footer.
 
 ## License
 
