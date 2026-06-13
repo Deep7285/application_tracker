@@ -26,7 +26,7 @@ Application Tracker is a single HTML file that runs in your browser. PhD applica
 It saves to your browser's `localStorage`, so your data never leaves your machine. Fork it, deploy it free on GitHub Pages, and you're done.
 
 ## Features
-
+ 
 - 📋 **Two trackers in one** — PhD applications and job applications, with status workflows tailored to each
 - 🧭 **Opportunities directory** — a curated tab of legitimate, hand-verified sources for PhD positions, fellowships, and industry research jobs (EURAXESS, FindAPhD, DeepMind, MSR, and more)
 - 🔖 **Personal saved links** — bookmark career pages, lab sites, or programmes you want to revisit. Private to your browser, included in JSON backups.
@@ -43,6 +43,16 @@ It saves to your browser's `localStorage`, so your data never leaves your machin
 - 📱 **Mobile-friendly** — check deadlines on your phone
 - 🌓 **Light + dark mode** — auto-follows system preference
 - 🔒 **100% private** — no servers, no analytics, no accounts. localStorage only.
+
+## Optional: smarter extraction & email drafts with your free Gemini key
+ 
+The app works fully without any AI. But if you add a **free Google Gemini API key** (menu `⋮` → **AI Settings**), you unlock:
+ 
+- **AI Quick Paste** — instead of regex pattern-matching, Gemini reads the pasted text in context. It understands "applications reviewed on a rolling basis", catches funding details, distinguishes the professor from the lab coordinator, and fills the notes field with the genuinely important bits. Falls back to regex automatically if the API is unavailable.
+- **AI outreach email drafts** — expand any PhD entry and click "Draft outreach email". Using the entry's professor/topic fields plus a short bio you write once in Settings, it generates a starting draft (with clearly-marked placeholders where you must add specifics about the professor's actual papers). Copy, personalise, send.
+**Setup (2 minutes):** Get a key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) (sign in with Google → "Create API key"), then paste it into menu → AI Settings. The free tier limits are far beyond personal use.
+ 
+**Privacy notes, honestly stated:** your key is stored only in your browser's localStorage — never in this repo, never uploaded anywhere. Text you extract is sent from your browser directly to Google's Gemini API (so don't paste anything confidential). If you never add a key, nothing is ever sent anywhere.
 
 ## Using Application Tracker across devices
 
